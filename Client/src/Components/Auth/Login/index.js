@@ -1,23 +1,29 @@
 import {GoogleLogin} from 'react-google-login';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {validateTokenId} from '../../../Store/Slices/Auth';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import WelcomeImg from '../../../images/Welcome.jpg';
+import { getAuthState } from "../../../Store/Selectors/Auth";
 
 const Login = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const currentPath = window.location.pathname;
+    const {isAuthed} = useSelector(getAuthState);
+
+    if(isAuthed) {
+        navigate(searchParams.get('onSuccess'));
+    }
+    
+    // const {isAuthed} = useSelector(getAuthState);
     const handleSuccess = async(authObj) => {
+        console.log('Hii');
         const {tokenId} = authObj;
         dispatch(validateTokenId(tokenId)).then((res)=>{
             console.log("res ",res);
-            if(res.error) {
-                console.log("off0");
-            } else {
-                console.log("oh yeah");
-                navigate(searchParams.get('onSuccess'));
-            }
+            navigate(searchParams.get('onSuccess'));
         }).catch((err) => {
             console.log("Offo ", err);
         });

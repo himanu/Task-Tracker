@@ -29,9 +29,7 @@ app.post('/validateTokenId', async(req,res)=>{
         })
     } catch(err) {
         console.log(err);
-        res.status(401).send({
-            message: 'Not authorised'
-        });
+        res.status(401).send(new Error('Not authorised'));
     }
     res.end();
 })

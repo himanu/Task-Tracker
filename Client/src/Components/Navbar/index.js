@@ -45,14 +45,15 @@ const ResponsiveAppBar = () => {
   function handleLogout() {
     window.localStorage.removeItem('tokenId');
     dispatch(logout());
+    navigate('/');
   }
   return (
     <>
-      <AppBar position="relative" sx={{background: '#72727221', color: '#333'}}>
+      <AppBar position="relative" sx={{background: '#3d3d3d', color: '#fff'}}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <Typography
-              variant="h4"
+              variant="h5"
               noWrap
               component="div"
               sx={{ mr: 2, display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}
@@ -110,7 +111,7 @@ const ResponsiveAppBar = () => {
                 <Button
                   key={page}
                   onClick={() => {navigate(`/${page}`);handleCloseNavMenu();}}
-                  sx={{ my: 2, color: '#727272', display: 'block' }}
+                  sx={{ my: 2, color: '#fff', display: 'block', fontSize: '0.75rem' }}
                 >
                   {page}
                 </Button>
@@ -151,7 +152,7 @@ const ResponsiveAppBar = () => {
               ): (
                 <Button
                   onClick={() => navigate(`/login/?onSuccess=${currentPath}`)}
-                  sx={{ my: 2, color: '#727272', display: 'block' }}
+                  sx={{ my: 2, color: '#fff', display: 'block', fontSize: '0.75rem' }}
                 >
                   Sign in
                 </Button>

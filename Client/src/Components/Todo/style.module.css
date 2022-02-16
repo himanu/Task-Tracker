@@ -1,0 +1,20 @@
+.addTask {
+    display: flex;
+    cursor: pointer;
+    gap: 1rem
+}
+.addTask:hover .addIcon {
+    color: #fff;
+    background-color: #3d3d3d;
+    border-radius: 50%;
+}
+.addTaskBtn {
+    background-color: #3d3d3d;
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 5px 10px;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1.5rem;
+}

@@ -4,13 +4,14 @@ import api from '../../api/index';
 export const validateTokenId = createAsyncThunk("validateTokenId", async(tokenId, {rejectWithValue})=>{
         try {
             const {data} = await api.validateTokenId(tokenId);
+            console.log('Hii ', data);
             window.localStorage.setItem('tokenId', JSON.stringify(tokenId));
             return {
                 data,
                 tokenId
             }
         } catch(err) {
-            console.log("invalid token id");
+            console.log("Invalid token id");
             if(window.localStorage.getItem('tokenId')) {
                 window.localStorage.removeItem('tokenId');
             }
@@ -38,7 +39,6 @@ const authSlice = createSlice({
     extraReducers: (builders)=>{
         builders
             .addCase(validateTokenId.pending, (state)=>{
-                return state;
             })
             .addCase(validateTokenId.fulfilled, (state,action) => {
                 return {

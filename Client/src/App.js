@@ -13,7 +13,6 @@ import Private from './Private';
 function App() {
     const {user, tokenId} = useSelector(getAuthState);
     const dispatch = useDispatch();
-
     useEffect(()=>{
         if(tokenId) {
             dispatch(validateTokenId(tokenId))
@@ -21,7 +20,7 @@ function App() {
     },[]);
 
     return (
-        <div className="rootComponent" style={{display: 'flex', background: '#f6f8f9', minHeight: '100vh', flexDirection: 'column'}}>
+        <div className="rootComponent" style={{display: 'flex', background: '#f6f8f9',minHeight: '100vh', flexDirection: 'column'}}>
             <Routes>
                 <Route path='/login' element={<Login />} />
                 <Route path="" element={<Navbar />}>
@@ -45,19 +44,6 @@ function App() {
                     />
                 </Route>
             </Routes>
-            {/* { !tokenId && (
-                <>
-                    <h1> Welcome Please login </h1>
-                    <Login />
-                </>
-            )}
-            { (tokenId && !user) && <h1> Loading... </h1> }
-            { (tokenId && user) && (
-                <>
-                    <h1> Welcome {user.name} </h1>
-                    <Logout />
-                </>
-            )} */}
         </div>
     )
 }

@@ -7,7 +7,7 @@ const Private = ({ children }) => {
     console.log("tokenId ", isAuthed);
     if(isAuthed) {
         return (
-            <div style={{display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <div style={{display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center'}}>
                 {children}
             </div>
         )
