@@ -4,7 +4,6 @@ import api from '../../api/index';
 export const validateTokenId = createAsyncThunk("validateTokenId", async(tokenId, {rejectWithValue})=>{
         try {
             const {data} = await api.validateTokenId(tokenId);
-            console.log('Hii ', data);
             window.localStorage.setItem('tokenId', JSON.stringify(tokenId));
             return {
                 data,
@@ -24,6 +23,7 @@ const authSlice = createSlice({
     name: 'auth',
     initialState: {
         isAuthed: false,
+        status: 'idle',
         user: {},
         tokenId: JSON.parse(window.localStorage.getItem('tokenId'))
     },
@@ -32,17 +32,23 @@ const authSlice = createSlice({
            return {
                isAuthed: false,
                user: {},
-               tokenId: null
+               tokenId: null,
+               status: 'idle'
            }
        } 
     },
     extraReducers: (builders)=>{
         builders
             .addCase(validateTokenId.pending, (state)=>{
+                console.log('Hii i am in pending state');
+                return {
+                    status: 'loading'
+                }
             })
             .addCase(validateTokenId.fulfilled, (state,action) => {
                 return {
                     isAuthed: true,
+                    status: 'success',
                     user: action.payload.data.payload,
                     tokenId: action.payload.tokenId
                 }
@@ -50,6 +56,7 @@ const authSlice = createSlice({
             .addCase(validateTokenId.rejected,() => {
                 return {
                     isAuthed: false,
+                    status: 'failed',
                     user: {},
                     tokenId: null
                 }

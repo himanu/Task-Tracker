@@ -21,12 +21,7 @@ const Login = () => {
     const handleSuccess = async(authObj) => {
         console.log('Hii');
         const {tokenId} = authObj;
-        dispatch(validateTokenId(tokenId)).then((res)=>{
-            console.log("res ",res);
-            navigate(searchParams.get('onSuccess'));
-        }).catch((err) => {
-            console.log("Offo ", err);
-        });
+        dispatch(validateTokenId(tokenId));
     }
     return (
         <div style={{margin: 'auto', background: '#fff', padding: '1rem', borderRadius: '0.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', height: '80vh', border: '1px solid #ccc'}}>

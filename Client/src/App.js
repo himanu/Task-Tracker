@@ -15,7 +15,8 @@ function App() {
     const dispatch = useDispatch();
     useEffect(()=>{
         if(tokenId) {
-            dispatch(validateTokenId(tokenId))
+            const ret = dispatch(validateTokenId(tokenId));
+            console.log('return value of dispatch function ', ret);
         }
     },[]);
 
