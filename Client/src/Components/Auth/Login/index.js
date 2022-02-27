@@ -1,17 +1,17 @@
 import {GoogleLogin} from 'react-google-login';
 import { useDispatch } from 'react-redux';
 import {validateTokenId} from '../../../Store/Slices/Auth';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+// import { useSearchParams, useNavigate } from 'react-router-dom';
 import WelcomeImg from '../../../images/Welcome.jpg';
 import { useState } from 'react';
 import { red } from '@mui/material/colors';
 
 const Login = () => {
-    const [searchParams] = useSearchParams();
-    const navigate = useNavigate();
+    // const [searchParams] = useSearchParams();
+    // const navigate = useNavigate();
     const dispatch = useDispatch();
     const [error, setError] = useState('');
-    
+
     const handleSuccess = async(authObj) => {
         const {tokenId} = authObj;
         return dispatch(validateTokenId(tokenId)).then((res)=>{
@@ -20,7 +20,7 @@ const Login = () => {
                 throw new Error(res.payload)
             }
             console.log('token id validation successful ', res);
-            navigate(searchParams.get('onSuccess'));
+            // navigate(searchParams.get('onSuccess'));
         }).catch((err) => {
             setError(err.message);
         });
