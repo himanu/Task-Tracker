@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import { getAuthState } from './Store/Selectors/Auth';
 import {validateTokenId} from './Store/Slices/Auth';
 import { Routes, Route} from 'react-router-dom';
 import Home from './Components/Home';
@@ -9,10 +8,12 @@ import Todo from './Components/Todo'
 import Navbar from './Components/Navbar';
 import About from './Components/About';
 import Private from './Private';
+import { CircularProgress } from '@mui/material';
 
 function App() {
-    const {user, tokenId} = useSelector(getAuthState);
+    const {tokenId, status} = useSelector((state) => state.auth);
     const dispatch = useDispatch();
+    console.log('status ', status);
     useEffect(()=>{
         if(tokenId) {
             const ret = dispatch(validateTokenId(tokenId));
@@ -45,7 +46,13 @@ function App() {
                     />
                 </Route>
             </Routes>
+            {status === 'loading' && (
+                <div style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
+                    <CircularProgress />
+                </div>
+            )}
         </div>
+
     )
 }
 export default App;

@@ -1,27 +1,29 @@
 import {GoogleLogin} from 'react-google-login';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {validateTokenId} from '../../../Store/Slices/Auth';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import WelcomeImg from '../../../images/Welcome.jpg';
-import { getAuthState } from "../../../Store/Selectors/Auth";
+import { useState } from 'react';
+import { red } from '@mui/material/colors';
 
 const Login = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const currentPath = window.location.pathname;
-    const {isAuthed} = useSelector(getAuthState);
-
-    if(isAuthed) {
-        navigate(searchParams.get('onSuccess'));
-    }
+    const [error, setError] = useState('');
     
-    // const {isAuthed} = useSelector(getAuthState);
     const handleSuccess = async(authObj) => {
-        console.log('Hii');
         const {tokenId} = authObj;
-        dispatch(validateTokenId(tokenId));
+        return dispatch(validateTokenId(tokenId)).then((res)=>{
+            if(res.error) {
+                console.log('res ', res);
+                throw new Error(res.payload)
+            }
+            console.log('token id validation successful ', res);
+            navigate(searchParams.get('onSuccess'));
+        }).catch((err) => {
+            setError(err.message);
+        });
     }
     return (
         <div style={{margin: 'auto', background: '#fff', padding: '1rem', borderRadius: '0.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', height: '80vh', border: '1px solid #ccc'}}>
@@ -34,6 +36,9 @@ const Login = () => {
                     onSuccess={handleSuccess}
                     onFailure={(obj)=> console.log("Failure ", obj)}
                 />
+            </div>
+            <div style={{color: red[400]}}>
+                {error}
             </div>
         </div>
     )
