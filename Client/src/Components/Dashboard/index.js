@@ -8,10 +8,9 @@ export default function Home() {
   const [tasks, setTasks] = useState({});
   const {user} = useSelector((state) => state.auth);
   const [createProjectModal, setCreateProjectModal] = useState(false);
+  const [projectLoaded, setProjectLoaded] = useState(false);
 
   useEffect(() => {
-    // fetch('http://localhost:4000')
-    // fetch projects from server
     setTimeout(() => {
       setProjects({
         0: {
@@ -20,6 +19,7 @@ export default function Home() {
           project_tasks: [0]
         }
       });
+      setProjectLoaded(true);
       setTasks({
         0: {
           task_id: 0,
@@ -37,10 +37,10 @@ export default function Home() {
     }, 1500);
     console.log('user ', user);
   }, []);
-
+  console.log('projectLoaded ', projectLoaded);
   return (
     <div>
-      <ProjectDrawer projects={projects} setCreateProjectModal={setCreateProjectModal}/>
+      <ProjectDrawer projects={projects} projectLoaded={projectLoaded} setCreateProjectModal={setCreateProjectModal}/>
       Hii {user.given_name}
       <p>
         Welcome to the todoist <br/>

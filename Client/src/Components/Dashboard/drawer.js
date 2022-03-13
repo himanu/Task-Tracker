@@ -9,10 +9,11 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import StarBorder from "@mui/icons-material/StarBorder";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import AddIcon from '@mui/icons-material/Add';
+import { CircularProgress } from '@mui/material'
 
-function NestedList({projects, setCreateProjectModal}) {
+function NestedList({projects, projectLoaded, setCreateProjectModal}) {
   const [open, setOpen] = React.useState(true);
-
+  console.log('Projects ', projects, ' ', projectLoaded);
   const handleClick = () => {
     setOpen(!open);
   };
@@ -35,7 +36,7 @@ function NestedList({projects, setCreateProjectModal}) {
       </div>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-            {Object.keys(projects).map((projectId, index) => {
+            { projectLoaded? Object.keys(projects).map((projectId, index) => {
               return (
                 <ListItemButton sx={{ pl: 4 }} key={index}>
                   <ListItemIcon>
@@ -44,14 +45,19 @@ function NestedList({projects, setCreateProjectModal}) {
                   <ListItemText primary={projects[projectId]['project_name']} />
                 </ListItemButton>
               )
-            })}
+              }): (
+                <div style={{textAlign: 'center'}}>
+                  <CircularProgress />
+                </div>  
+              )
+            }
         </List>
       </Collapse>
     </List>
   );
 }
 
-export default function ProjectDrawer({projects, setCreateProjectModal}) {
+export default function ProjectDrawer({projects, projectLoaded, setCreateProjectModal}) {
   console.log('projects ', projects);
   return (
     <div>
@@ -66,7 +72,7 @@ export default function ProjectDrawer({projects, setCreateProjectModal}) {
             }
           }}
         >
-          {<NestedList projects={projects} setCreateProjectModal={setCreateProjectModal}/>}
+          {<NestedList projects={projects} projectLoaded={projectLoaded} setCreateProjectModal={setCreateProjectModal}/>}
         </Drawer>
       </React.Fragment>
     </div>
