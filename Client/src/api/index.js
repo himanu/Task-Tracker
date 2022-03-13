@@ -2,8 +2,8 @@ import axiosInstance from './axiosInstance';
 import routes from './routes';
 
 const api = {
-    validateTokenId(tokenId) {
-        return axiosInstance.get(routes.validateTokenId,{
+    signIn(tokenId) {
+        return axiosInstance.get(routes.signIn,{
             headers: {
                 'Authorization': `Bearer ${tokenId}`
             }
@@ -11,7 +11,7 @@ const api = {
     },
     addTask(task) {
         // this will return a promise
-        const tokenId = localStorage.getItem('tokenId');
+        const tokenId = JSON.parse(localStorage.getItem('tokenId'));
         if(!tokenId) {
             return Promise.reject('Please Authenticate first');
         }

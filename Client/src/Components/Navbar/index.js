@@ -17,7 +17,7 @@ import { getAuthState } from '../../Store/Selectors/Auth';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../Store/Slices/Auth';
 
-const pages = ['Todo', 'About'];
+const pages = ['Dashboard', 'About'];
 const settings = ['Profile', 'Logout'];
 
 const ResponsiveAppBar = () => {

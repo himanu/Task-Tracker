@@ -32,13 +32,6 @@ const Todo = () => {
             setTitle('');
             setDescription('');
         });
-        // if(success) {
-        //     dispatch an action to add the new task to the store
-        //     setVisibilityAddTaskForm('closed');
-        // } else {
-        //     setError(error)
-        // }
-
     } 
 
     const tasks = [];

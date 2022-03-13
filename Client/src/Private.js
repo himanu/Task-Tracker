@@ -1,15 +1,15 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { useEffect } from "react";
-import { validateTokenId } from "./Store/Slices/Auth";
+import { signIn } from "./Store/Slices/Auth";
 import Login from "./Components/Auth/Login";
 import { CircularProgress } from "@mui/material";
 const Private = ({ children }) => {
     const dispatch = useDispatch();
-    const {tokenId, status, isAuthed} =  useSelector((state)=> state.auth);
+    const {tokenId, status, isAuthed} =  useSelector((state)=> state.auth, shallowEqual);
     
     useEffect(() => {
         if(tokenId) {
-            dispatch(validateTokenId(tokenId));
+            dispatch(signIn(tokenId));
         }
     },[]);
     console.log('status in private ', status);

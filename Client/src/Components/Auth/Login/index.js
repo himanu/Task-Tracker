@@ -1,26 +1,27 @@
 import {GoogleLogin} from 'react-google-login';
-import { useDispatch } from 'react-redux';
-import {validateTokenId} from '../../../Store/Slices/Auth';
-// import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {signIn} from '../../../Store/Slices/Auth';
 import WelcomeImg from '../../../images/Welcome.jpg';
 import { useState } from 'react';
 import { red } from '@mui/material/colors';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-    // const [searchParams] = useSearchParams();
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [error, setError] = useState('');
-
     const handleSuccess = async(authObj) => {
         const {tokenId} = authObj;
-        return dispatch(validateTokenId(tokenId)).then((res)=>{
+        return dispatch(signIn(tokenId)).then((res)=>{
             if(res.error) {
                 console.log('res ', res);
                 throw new Error(res.payload)
             }
             console.log('token id validation successful ', res);
-            // navigate(searchParams.get('onSuccess'));
+            const onSuccess = (new URLSearchParams(window.location.search)).get('onSuccess');
+            if(onSuccess) {
+                navigate(onSuccess);
+            }
         }).catch((err) => {
             setError(err.message);
         });
@@ -29,7 +30,7 @@ const Login = () => {
         <div style={{margin: 'auto', background: '#fff', padding: '1rem', borderRadius: '0.25rem', display: 'flex', flexDirection: 'column', alignItems: 'center', height: '80vh', border: '1px solid #ccc'}}>
             <img src={WelcomeImg} style={{height: '80px', width: '80px', borderRadius: '50%'}} alt="Website icon"/>
             <h3>Welcome to the Todoist</h3>
-            <p>Choose one of the below method to join</p>
+            <p>Please sign in to continue</p>
             <div style={{position: 'absolute', top: '50%'}}>
                 <GoogleLogin 
                     clientId={process.env.REACT_APP_CLIENT_ID}

@@ -1,5 +1,5 @@
 const routes = {
-    validateTokenId: 'validateTokenId',
+    signIn: 'signIn',
     addTask: 'tasks/add'
 }
 export default routes;

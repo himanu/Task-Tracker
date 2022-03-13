@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from '../../api/index';
 
-export const validateTokenId = createAsyncThunk("validateTokenId", async(tokenId, {rejectWithValue})=>{
+export const signIn = createAsyncThunk("signIn", async(tokenId, {rejectWithValue})=>{
         try {
-            const {data} = await api.validateTokenId(tokenId);
+            const {data} = await api.signIn(tokenId);
             console.log('data from api ', data);
             window.localStorage.setItem('tokenId', JSON.stringify(tokenId));
             return {
@@ -20,8 +20,8 @@ export const validateTokenId = createAsyncThunk("validateTokenId", async(tokenId
                 return rejectWithValue(err.response.data);
             } else if(err.request) {
                 // this will execute when request is made but no response has received
-                console.log('validatetokenId error ', err.request);
-                return rejectWithValue(err.request);
+                console.log('sign in error ', err.request);
+                return rejectWithValue(err.message);
             } else {
                 // this will execute when request was not made successfully
                 return rejectWithValue(err.message);
@@ -50,14 +50,14 @@ const authSlice = createSlice({
     },
     extraReducers: (builders)=>{
         builders
-            .addCase(validateTokenId.pending, (state)=>{
+            .addCase(signIn.pending, (state)=>{
                 console.log('Hii i am in pending state');
                 return {
                     ...state,
                     status: 'loading'
                 }
             })
-            .addCase(validateTokenId.fulfilled, (state,action) => {
+            .addCase(signIn.fulfilled, (state,action) => {
                 return {
                     isAuthed: true,
                     status: 'success',
@@ -65,7 +65,7 @@ const authSlice = createSlice({
                     tokenId: action.payload.tokenId
                 }
             })
-            .addCase(validateTokenId.rejected,() => {
+            .addCase(signIn.rejected,() => {
                 return {
                     isAuthed: false,
                     status: 'failed',
