@@ -11,10 +11,9 @@ import Private from './Private';
 function App() {
     const dispatch = useDispatch();
     useEffect(()=>{
-        const tokenId = window.localStorage.getItem('tokenId');
+        const tokenId = JSON.parse(window.localStorage.getItem('tokenId'));
         if(tokenId) {
             const ret = dispatch(signIn(tokenId));
-            console.log('return value of dispatch function ', ret);
         }
     },[]);
 
