@@ -11,7 +11,7 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import AddIcon from '@mui/icons-material/Add';
 import { CircularProgress } from '@mui/material'
 
-function NestedList({projects, projectLoaded, setCreateProjectModal}) {
+function NestedList({projects, projectLoaded, error, setCreateProjectModal}) {
   const [open, setOpen] = React.useState(true);
   console.log('Projects ', projects, ' ', projectLoaded);
   const handleClick = () => {
@@ -47,7 +47,7 @@ function NestedList({projects, projectLoaded, setCreateProjectModal}) {
               )
               }): (
                 <div style={{textAlign: 'center'}}>
-                  <CircularProgress />
+                  {error? (<span style={{color: 'red'}}> {error} </span>): <CircularProgress />}
                 </div>  
               )
             }
@@ -57,7 +57,7 @@ function NestedList({projects, projectLoaded, setCreateProjectModal}) {
   );
 }
 
-export default function ProjectDrawer({projects, projectLoaded, setCreateProjectModal}) {
+export default function ProjectDrawer({projects, projectLoaded, error, setCreateProjectModal}) {
   console.log('projects ', projects);
   return (
     <div>
@@ -72,7 +72,7 @@ export default function ProjectDrawer({projects, projectLoaded, setCreateProject
             }
           }}
         >
-          {<NestedList projects={projects} projectLoaded={projectLoaded} setCreateProjectModal={setCreateProjectModal}/>}
+          {<NestedList projects={projects} projectLoaded={projectLoaded} error={error} setCreateProjectModal={setCreateProjectModal}/>}
         </Drawer>
       </React.Fragment>
     </div>

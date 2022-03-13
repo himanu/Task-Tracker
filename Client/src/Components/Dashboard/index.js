@@ -9,6 +9,7 @@ export default function Home() {
   const {user} = useSelector((state) => state.auth);
   const [createProjectModal, setCreateProjectModal] = useState(false);
   const [projectLoaded, setProjectLoaded] = useState(false);
+  const [error, setError] = useState();
 
   useEffect(() => {
     setTimeout(() => {
@@ -40,7 +41,7 @@ export default function Home() {
   console.log('projectLoaded ', projectLoaded);
   return (
     <div>
-      <ProjectDrawer projects={projects} projectLoaded={projectLoaded} setCreateProjectModal={setCreateProjectModal}/>
+      <ProjectDrawer projects={projects} projectLoaded={projectLoaded} error={error} setCreateProjectModal={setCreateProjectModal}/>
       Hii {user.given_name}
       <p>
         Welcome to the todoist <br/>
