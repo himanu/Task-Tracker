@@ -13,7 +13,7 @@ const db = {
         email,
         name,
         picture,
-        projects: []
+        projectIds: []
       });
     }
     return user;
@@ -31,7 +31,7 @@ const db = {
         email
       }, {
         $addToSet: {
-          'projects': project.insertedId
+          'projectIds': project.insertedId
         }
       }, {
         returnDocument: 'after'
@@ -56,12 +56,12 @@ const db = {
     const user = await client.db().collection('Users').findOne({
       email
     });
-    const projectIdArray = user.projects;
-    console.log('projectIdArray ', projectIdArray);
+    const projectIds = user.projectIds;
+    console.log('projectIds ', projectIds);
     const projectsObject = {};
-    for(let i = 0; i<projectIdArray.length; i++) {
-      const document = await this.getProject(projectIdArray[i]);
-      projectsObject[(projectIdArray[i])] = document;
+    for(let i = 0; i<projectIds.length; i++) {
+      const document = await this.getProject(projectIds[i]);
+      projectsObject[(projectIds[i])] = document;
     }
     return projectsObject;
   }

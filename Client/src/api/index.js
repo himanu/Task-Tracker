@@ -24,12 +24,12 @@ const api = {
             }
         })
     },
-    getProjects() {
+    getProjects(projectIds) {
         const tokenId = JSON.parse(localStorage.getItem('tokenId'));
         if(!tokenId) {
             return Promise.reject('Please Authenticate first');
         }
-        return axiosInstance.get(routes.projects, {
+        return axiosInstance.get(routes.projects + `/?projectIds${projectIds}`, {
             headers: {
                 'Authorization': `Bearer ${tokenId}`
             }
