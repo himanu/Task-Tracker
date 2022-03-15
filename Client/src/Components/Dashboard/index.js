@@ -13,33 +13,9 @@ export default function Home() {
   const [error, setError] = useState();
 
   useEffect(() => {
-    api.getProjects().then((res) => {
+    api.getProjects(user.projectIds).then((res) => {
       console.log('Response is ', res);
     });
-    // setTimeout(() => {
-    //   setProjects({
-    //     0: {
-    //       project_id: 0,
-    //       project_name: 'Todo App',
-    //       project_tasks: [0]
-    //     }
-    //   });
-    //   setProjectLoaded(true);
-    //   setTasks({
-    //     0: {
-    //       task_id: 0,
-    //       task_title: 'UI',
-    //       subtasks: [1],
-    //       parent_task: null
-    //     },
-    //     1: {
-    //       task_id: 1,
-    //       task_title: 'Server',
-    //       subtasks: [],
-    //       parent_task: 0
-    //     }
-    //   });
-    // }, 1500);
     console.log('user ', user);
   }, []);
   console.log('projectLoaded ', projectLoaded);
