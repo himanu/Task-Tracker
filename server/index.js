@@ -16,19 +16,31 @@ app.use('/', (req,res, next)=>{
 })
 
 app.get('/signIn', verifyToken, async(req,res)=>{
+    try {
+        const payload = req.auth;
+        const user = await db.signInUser(payload);
+        res.status(200).send({user});
+        // const isAlreadyAMember = await db.isAlreadyAMember(payload.email);
+        // if(!isAlreadyAMember) {
+        //     console.log('New Member');
+        //     await db.addNewMember(payload);
+        // } else {
+        //     console.log('is already a member');
+        // }
+        // res.status(200).send({
+        //     payload
+        // })
+    } catch(err) {
+        console.log('Error occured ', err.message);
+        res.status(500).send('Mongodb database error');
+    }
+})
+app.get('/validateTokenId', verifyToken, async(req,res) => {
     const payload = req.auth;
-    // const isAlreadyAMember = await db.isAlreadyAMember(payload.email);
-    // if(!isAlreadyAMember) {
-    //     console.log('New Member');
-    //     await db.addNewMember(payload);
-    // } else {
-    //     console.log('is already a member');
-    // }
     res.status(200).send({
         payload
     })
 })
-
 app.get('/projects', verifyToken, async(req, res) => {
     const {email} = req.auth;
     const projectsObject = await db.getProjects(email);

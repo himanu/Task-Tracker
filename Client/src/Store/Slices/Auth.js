@@ -61,7 +61,7 @@ const authSlice = createSlice({
                 return {
                     isAuthed: true,
                     status: 'success',
-                    user: action.payload.data.payload,
+                    user: action.payload.data.user,
                     tokenId: action.payload.tokenId
                 }
             })

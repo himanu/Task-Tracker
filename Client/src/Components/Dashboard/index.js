@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import ProjectDrawer from "./drawer";
 import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button'
+import Button from 'react-bootstrap/Button';
+import api from "../../api";
 export default function Home() {
   const [projects, setProjects] = useState({});
   const [tasks, setTasks] = useState({});
@@ -12,30 +13,33 @@ export default function Home() {
   const [error, setError] = useState();
 
   useEffect(() => {
-    setTimeout(() => {
-      setProjects({
-        0: {
-          project_id: 0,
-          project_name: 'Todo App',
-          project_tasks: [0]
-        }
-      });
-      setProjectLoaded(true);
-      setTasks({
-        0: {
-          task_id: 0,
-          task_title: 'UI',
-          subtasks: [1],
-          parent_task: null
-        },
-        1: {
-          task_id: 1,
-          task_title: 'Server',
-          subtasks: [],
-          parent_task: 0
-        }
-      });
-    }, 1500);
+    api.getProjects().then((res) => {
+      console.log('Response is ', res);
+    });
+    // setTimeout(() => {
+    //   setProjects({
+    //     0: {
+    //       project_id: 0,
+    //       project_name: 'Todo App',
+    //       project_tasks: [0]
+    //     }
+    //   });
+    //   setProjectLoaded(true);
+    //   setTasks({
+    //     0: {
+    //       task_id: 0,
+    //       task_title: 'UI',
+    //       subtasks: [1],
+    //       parent_task: null
+    //     },
+    //     1: {
+    //       task_id: 1,
+    //       task_title: 'Server',
+    //       subtasks: [],
+    //       parent_task: 0
+    //     }
+    //   });
+    // }, 1500);
     console.log('user ', user);
   }, []);
   console.log('projectLoaded ', projectLoaded);

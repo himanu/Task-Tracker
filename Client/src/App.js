@@ -13,7 +13,7 @@ function App() {
     useEffect(()=>{
         const tokenId = JSON.parse(window.localStorage.getItem('tokenId'));
         if(tokenId) {
-            const ret = dispatch(signIn(tokenId));
+            dispatch(signIn(tokenId));
         }
     },[]);
 
