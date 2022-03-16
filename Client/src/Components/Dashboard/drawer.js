@@ -13,7 +13,7 @@ import { CircularProgress } from '@mui/material'
 
 function NestedList({projects, projectLoaded, error, setCreateProjectModal}) {
   const [open, setOpen] = React.useState(true);
-  console.log('Projects ', projects, ' ', projectLoaded);
+  // console.log('Projects ', projects, ' ', projectLoaded);
   const handleClick = () => {
     setOpen(!open);
   };
@@ -58,7 +58,7 @@ function NestedList({projects, projectLoaded, error, setCreateProjectModal}) {
 }
 
 export default function ProjectDrawer({projects, projectLoaded, error, setCreateProjectModal}) {
-  console.log('projects ', projects);
+  // console.log('projects ', projects);
   return (
     <div>
       <React.Fragment>

@@ -12,7 +12,6 @@ const Private = ({ children }) => {
             dispatch(signIn(tokenId));
         }
     },[]);
-    console.log('status in private ', status);
     if(isAuthed) {
         return (
             <div style={{display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center'}}>

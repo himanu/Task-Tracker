@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ProjectDrawer from "./drawer";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import api from "../../api";
+import { getProjects } from "../../Store/Slices/Projects";
 export default function Home() {
+  const dispatch = useDispatch();
   const [projects, setProjects] = useState({});
   const [tasks, setTasks] = useState({});
   const {user} = useSelector((state) => state.auth);
@@ -13,12 +15,12 @@ export default function Home() {
   const [error, setError] = useState();
 
   useEffect(() => {
-    api.getProjects(user.projectIds).then((res) => {
-      console.log('Response is ', res);
-    });
-    console.log('user ', user);
+    dispatch(getProjects());
+    // api.getProjects(user.projectIds).then((res) => {
+    //   console.log('Response is ', res);
+    // });
+    // console.log('user ', user);
   }, []);
-  console.log('projectLoaded ', projectLoaded);
   return (
     <div>
       <ProjectDrawer projects={projects} projectLoaded={projectLoaded} error={error} setCreateProjectModal={setCreateProjectModal}/>

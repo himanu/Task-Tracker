@@ -4,6 +4,7 @@ import api from "../../api";
 export const getProjects = createAsyncThunk('getProjects', async(projectIds, {rejectWithValue})=> {
   try {
     const {data: projectsObject} = await api.getProjects(projectIds);
+    console.log('projectsObject ', projectsObject);
     return projectsObject;
   } catch(error) {
     if(error.response) {
@@ -31,13 +32,15 @@ const projectsSlice = createSlice({
       .addCase(getProjects.pending, (state) => {
         return {
           ...state,
-          isFetching: true
+          isFetching: true,
+          error: ''
         }
       })
       .addCase(getProjects.fulfilled, (state, action)=>{
         return {
           ...state,
           isFetching: false,
+          error: '',
           projectsObject: action.payload
         }
       })

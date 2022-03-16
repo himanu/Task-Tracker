@@ -13,14 +13,12 @@ export const signIn = createAsyncThunk("signIn", async(tokenId, {rejectWithValue
         } catch(err) {
             if(err.response) {
                 // this will execute when request is successfully made and the server has sent the response with a status code that falls out of the 2xx range
-                console.log("Invalid token id ",err.response.data);
                 if(window.localStorage.getItem('tokenId')) {
                     window.localStorage.removeItem('tokenId');
                 }
                 return rejectWithValue(err.response.data);
             } else if(err.request) {
                 // this will execute when request is made but no response has received
-                console.log('sign in error ', err.request);
                 return rejectWithValue(err.message);
             } else {
                 // this will execute when request was not made successfully
@@ -51,7 +49,6 @@ const authSlice = createSlice({
     extraReducers: (builders)=>{
         builders
             .addCase(signIn.pending, (state)=>{
-                console.log('Hii i am in pending state');
                 return {
                     ...state,
                     status: 'loading'
