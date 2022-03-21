@@ -34,7 +34,14 @@ const db = {
       tasks: []
     })
     console.log('Project ', project);
-    return project;
+    const projectId = project.insertedId;
+
+    return {
+      _id: projectId,
+      project_name,
+      userEmail,
+      tasks: []
+    };
   },
   
   async getProjectById(projectId) {

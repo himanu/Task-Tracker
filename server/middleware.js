@@ -12,7 +12,7 @@ function verifyToken(req, res, next) {
       next();
   }).catch((err) => {
       console.log('Authentication failed ',err.message);
-      res.status(403).send('Authentication failed');
+      res.status(403).send('Authentication Failed');
   })
 }
 module.exports = {verifyToken};

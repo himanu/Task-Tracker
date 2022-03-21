@@ -13,7 +13,7 @@ const api = {
         // this will return a promise
         const tokenId = JSON.parse(localStorage.getItem('tokenId'));
         if(!tokenId) {
-            return Promise.reject('Please Authenticate first');
+            return Promise.reject('Authentication Failed');
         }
         
         return axiosInstance.post(routes.addTask, {
@@ -27,13 +27,27 @@ const api = {
     getProjects() {
         const tokenId = JSON.parse(localStorage.getItem('tokenId'));
         if(!tokenId) {
-            return Promise.reject('Please Authenticate first');
+            throw new Error('Authentication Failed');
         }
         return axiosInstance.get(routes.projects, {
             headers: {
                 'Authorization': `Bearer ${tokenId}`
             }
         });
+    },
+    addProject(project_name) {
+        const tokenId = JSON.parse(localStorage.getItem('tokenId'));
+        if(!tokenId) {
+            throw new Error('Authentication Failed');
+        }
+        return axiosInstance.post(routes.projects, {
+                project_name
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${tokenId}`
+                }
+            }
+        );
     }
 };
 export default api;

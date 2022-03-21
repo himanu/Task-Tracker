@@ -38,6 +38,12 @@ app.get('/projects', verifyToken, async(req, res) => {
     console.log('All projects ', projectsObject);
     res.send(projectsObject);
 })
+app.post('/projects', verifyToken, async(req, res) => {
+    const {email} = req.auth;
+    const project_name = req.body.project_name;
+    const project = await db.addProject(email, project_name);
+    res.send(project);
+})
 
 
 app.listen(4000,()=>{

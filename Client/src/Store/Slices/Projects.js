@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api";
-
+function noOfProjects(projectsObject) {
+  return Object.keys(projectsObject).length;
+}
 export const getProjects = createAsyncThunk('getProjects', async(_, {rejectWithValue})=> {
   try {
     const {data: projectsObject} = await api.getProjects();
@@ -9,13 +11,37 @@ export const getProjects = createAsyncThunk('getProjects', async(_, {rejectWithV
   } catch(error) {
     if(error.response) {
       // server has send a response with status code other than 2xx
-      rejectWithValue(error.response.data);
+      return rejectWithValue(error.response.data);
     } else if(error.request) {
       // client has sent a request but does not receive any response
-      rejectWithValue(error.request);
+      return rejectWithValue(error.request);
     } else {
       // request not sent
-      rejectWithValue(error.message);
+      return rejectWithValue(error.message);
+    }
+  }
+})
+
+export const addProject = createAsyncThunk('addProject', async(project_name, {getState, rejectWithValue})=> {
+  try {
+    const {data: project} = await api.addProject(project_name);
+    const projectsObject = getState().projects.projectsObject;
+    const idOfNewObject = noOfProjects(projectsObject);
+    console.log('project ', project);
+    return {
+      ...projectsObject,
+      [idOfNewObject]: project
+    };
+  } catch(error) {
+    if(error.response) {
+      // server has send a response with status code other than 2xx
+      return rejectWithValue(error.response.data);
+    } else if(error.request) {
+      // client has sent a request but does not receive any response
+      return rejectWithValue(error.request);
+    } else {
+      // request not sent
+      return rejectWithValue(error.message);
     }
   }
 })
@@ -45,11 +71,33 @@ const projectsSlice = createSlice({
         }
       })
       .addCase(getProjects.rejected, (state, action)=>{
+        console.log('hello ', action.payload);
+        return {
+          ...state,
+          isFetching: false,
+          error: action.payload
+        }
+      })
+      .addCase(addProject.pending, (state) => {
+        return {
+          ...state,
+          isFetching: true,
+          error: ''
+        }
+      })
+      .addCase(addProject.fulfilled, (state, action)=>{
+        return {
+          ...state,
+          isFetching: false,
+          error: '',
+          projectsObject: action.payload
+        }
+      })
+      .addCase(addProject.rejected, (state, action)=>{
         return {
           ...state,
           isFetching: false,
           error: action.payload,
-          projectsObject: {}
         }
       })
   }

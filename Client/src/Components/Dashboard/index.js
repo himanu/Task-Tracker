@@ -3,12 +3,18 @@ import { useSelector, useDispatch } from "react-redux";
 import ProjectDrawer from "./drawer";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import { getProjects } from "../../Store/Slices/Projects";
+import { getProjects, addProject } from "../../Store/Slices/Projects";
 
 export default function Home() {
   const dispatch = useDispatch();
+  const [project_name, setProject_Name] = useState('');
   const {user} = useSelector((state) => state.auth);
   const [createProjectModal, setCreateProjectModal] = useState(false);
+
+  const handleAddProject = async() => {
+    await dispatch(addProject(project_name));
+    setCreateProjectModal(false);
+  }
   useEffect(() => {
     if(user) {
       dispatch(getProjects());
@@ -39,14 +45,14 @@ export default function Home() {
               Name
             </label>
             <br />
-            <input type="text" id="project_name" />
+            <input type="text" id="project_name" value={project_name} onChange={(e) => setProject_Name(e.target.value)} />
           </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setCreateProjectModal(false)}>
             Cancel
           </Button>
-          <Button variant="primary">Add</Button>
+          <Button variant="primary" onClick={handleAddProject}>Add</Button>
         </Modal.Footer>
       </Modal>
     </div>
