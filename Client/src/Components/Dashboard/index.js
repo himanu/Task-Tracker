@@ -3,27 +3,21 @@ import { useSelector, useDispatch } from "react-redux";
 import ProjectDrawer from "./drawer";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import api from "../../api";
 import { getProjects } from "../../Store/Slices/Projects";
+
 export default function Home() {
   const dispatch = useDispatch();
-  const [projects, setProjects] = useState({});
-  const [tasks, setTasks] = useState({});
   const {user} = useSelector((state) => state.auth);
   const [createProjectModal, setCreateProjectModal] = useState(false);
-  const [projectLoaded, setProjectLoaded] = useState(false);
-  const [error, setError] = useState();
-
   useEffect(() => {
-    dispatch(getProjects());
-    // api.getProjects(user.projectIds).then((res) => {
-    //   console.log('Response is ', res);
-    // });
-    // console.log('user ', user);
+    if(user) {
+      dispatch(getProjects());
+    }
   }, []);
+
   return (
     <div>
-      <ProjectDrawer projects={projects} projectLoaded={projectLoaded} error={error} setCreateProjectModal={setCreateProjectModal}/>
+      <ProjectDrawer setCreateProjectModal={setCreateProjectModal}/>
       Hii {user.given_name}
       <p>
         Welcome to the todoist <br/>

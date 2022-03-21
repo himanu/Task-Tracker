@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api";
 
-export const getProjects = createAsyncThunk('getProjects', async(projectIds, {rejectWithValue})=> {
+export const getProjects = createAsyncThunk('getProjects', async(_, {rejectWithValue})=> {
   try {
-    const {data: projectsObject} = await api.getProjects(projectIds);
+    const {data: projectsObject} = await api.getProjects();
     console.log('projectsObject ', projectsObject);
     return projectsObject;
   } catch(error) {

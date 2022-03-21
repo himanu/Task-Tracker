@@ -3,66 +3,58 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://himanshu:vyCSGizSAW9atSf@cluster0.zmg0v.mongodb.net/Todoist?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
+let isClientConnected = false;
+async function connectTheClient() {
+  if(isClientConnected) {
+    return;
+  }
+  await client.connect();
+  isClientConnected = true;
+}
 const db = {
   async signInUser({email, name, picture}) {
-    await client.connect();
+    await connectTheClient();
     let user = await client.db().collection('Users').findOne({email});
 
     if(!user) {
       user = await client.db().collection('Users').insertOne({
         email,
         name,
-        picture,
-        projectIds: []
+        picture
       });
     }
-    return user;
+    console.log('User ', user);
   },
-  async addProject(email, project_name) {
-    await client.connect();
+  async addProject(userEmail, project_name) {
+    await connectTheClient();
     // add the project to the projects collection
     const project = await client.db().collection('projects').insertOne({
       project_name,
+      userEmail,
       tasks: []
     })
     console.log('Project ', project);
-
-    const document = await client.db().collection('Users').findOneAndUpdate({
-        email
-      }, {
-        $addToSet: {
-          'projectIds': project.insertedId
-        }
-      }, {
-        returnDocument: 'after'
-      }
-    )
-    if(!document)
-      return "Authentication error";
-    else {
-      console.log('document ', document.value.projects);
-    }
-    
+    return project;
   },
   
-  async getProject(projectId) {
-    await client.connect();
+  async getProjectById(projectId) {
+    await connectTheClient();
     const document = await client.db().collection('projects').findOne({
       _id: projectId
     });
     return document;
   },
   async getProjects(email) {
-    const user = await client.db().collection('Users').findOne({
-      email
-    });
-    const projectIds = user.projectIds;
-    console.log('projectIds ', projectIds);
+    await connectTheClient();
+    const projectsCursor = await client.db().collection('projects').find({
+      userEmail: email
+    })
     const projectsObject = {};
-    for(let i = 0; i<projectIds.length; i++) {
-      const document = await this.getProject(projectIds[i]);
-      projectsObject[(projectIds[i])] = document;
-    }
+    let idx = 0;
+    await projectsCursor.forEach((project) => {
+      projectsObject[idx] = project;
+      idx++;
+    })
     return projectsObject;
   }
 }

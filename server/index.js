@@ -18,18 +18,9 @@ app.use('/', (req,res, next)=>{
 app.get('/signIn', verifyToken, async(req,res)=>{
     try {
         const payload = req.auth;
-        const user = await db.signInUser(payload);
-        res.status(200).send({user});
-        // const isAlreadyAMember = await db.isAlreadyAMember(payload.email);
-        // if(!isAlreadyAMember) {
-        //     console.log('New Member');
-        //     await db.addNewMember(payload);
-        // } else {
-        //     console.log('is already a member');
-        // }
-        // res.status(200).send({
-        //     payload
-        // })
+        await db.signInUser(payload);
+        const {email, name, picture} = payload;
+        res.status(200).send({user: {email, name, picture}});
     } catch(err) {
         console.log('Error occured ', err.message);
         res.status(500).send('Mongodb database error');

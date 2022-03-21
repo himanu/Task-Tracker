@@ -10,13 +10,20 @@ import StarBorder from "@mui/icons-material/StarBorder";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import AddIcon from '@mui/icons-material/Add';
 import { CircularProgress } from '@mui/material'
+import { useSelector, useDispatch } from "react-redux";
+import {logout} from '../../Store/Slices/Auth';
 
-function NestedList({projects, projectLoaded, error, setCreateProjectModal}) {
+function NestedList({setCreateProjectModal}) {
   const [open, setOpen] = React.useState(true);
-  // console.log('Projects ', projects, ' ', projectLoaded);
+  const {isFetching, error, projectsObject}= useSelector((state) => state.projects);
+  const dispatch = useDispatch();
   const handleClick = () => {
     setOpen(!open);
   };
+  
+  if(error === 'Authentication Failed') {
+    dispatch(logout());
+  } 
 
   return (
     <List
@@ -36,16 +43,22 @@ function NestedList({projects, projectLoaded, error, setCreateProjectModal}) {
       </div>
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-            { projectLoaded? Object.keys(projects).map((projectId, index) => {
-              return (
-                <ListItemButton sx={{ pl: 4 }} key={index}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <ListItemText primary={projects[projectId]['project_name']} />
-                </ListItemButton>
-              )
-              }): (
+            { !isFetching? 
+              (Object.keys(projectsObject).length? (Object.keys(projectsObject).map((projectId, index) => {
+                return (
+                  <ListItemButton sx={{ pl: 4 }} key={index}>
+                    <ListItemIcon>
+                      <StarBorder />
+                    </ListItemIcon>
+                    <ListItemText primary={projectsObject[projectId]['project_name']} />
+                  </ListItemButton>
+                )
+                })
+              ): (
+                <div>-
+                  No projects
+                </div>
+              )): (
                 <div style={{textAlign: 'center'}}>
                   {error? (<span style={{color: 'red'}}> {error} </span>): <CircularProgress />}
                 </div>  
@@ -58,7 +71,6 @@ function NestedList({projects, projectLoaded, error, setCreateProjectModal}) {
 }
 
 export default function ProjectDrawer({projects, projectLoaded, error, setCreateProjectModal}) {
-  // console.log('projects ', projects);
   return (
     <div>
       <React.Fragment>
