@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItemText from "@mui/material/ListItemText";
@@ -13,6 +14,9 @@ import { CircularProgress } from '@mui/material'
 import { useSelector, useDispatch } from "react-redux";
 import {logout} from '../../Store/Slices/Auth';
 import {useNavigate} from 'react-router-dom';
+import { getProjects, addProject } from "../../Store/Slices/Projects";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 function NestedList({setCreateProjectModal}) {
   const navigate = useNavigate();
@@ -72,7 +76,23 @@ function NestedList({setCreateProjectModal}) {
   );
 }
 
-export default function ProjectDrawer({projects, projectLoaded, error, setCreateProjectModal}) {
+export default function ProjectDrawer({projects, projectLoaded, error}) {
+  const dispatch = useDispatch();
+  const [project_name, setProject_Name] = useState('');
+  const {user} = useSelector((state) => state.auth);
+  const [createProjectModal, setCreateProjectModal] = useState(false);
+
+  useEffect(() => {
+    if(user) {
+      dispatch(getProjects());
+    }
+  }, []);
+
+  const handleAddProject = async() => {
+    await dispatch(addProject(project_name));
+    setCreateProjectModal(false);
+  }
+
   return (
     <div>
       <React.Fragment>
@@ -89,6 +109,32 @@ export default function ProjectDrawer({projects, projectLoaded, error, setCreate
           {<NestedList projects={projects} projectLoaded={projectLoaded} error={error} setCreateProjectModal={setCreateProjectModal}/>}
         </Drawer>
       </React.Fragment>
+      <Modal
+        show={createProjectModal}
+        onHide={() => setCreateProjectModal(false)}
+        backdrop="static"
+        keyboard={false}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Add Project</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div>
+            <label htmlFor="project_name">
+              Name
+            </label>
+            <br />
+            <input type="text" id="project_name" value={project_name} onChange={(e) => setProject_Name(e.target.value)} />
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setCreateProjectModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleAddProject}>Add</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
