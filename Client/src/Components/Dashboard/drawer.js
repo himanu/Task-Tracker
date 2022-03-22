@@ -12,8 +12,10 @@ import AddIcon from '@mui/icons-material/Add';
 import { CircularProgress } from '@mui/material'
 import { useSelector, useDispatch } from "react-redux";
 import {logout} from '../../Store/Slices/Auth';
+import {useNavigate} from 'react-router-dom';
 
 function NestedList({setCreateProjectModal}) {
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(true);
   const {isFetching, error, projectsObject}= useSelector((state) => state.projects);
   const dispatch = useDispatch();
@@ -46,7 +48,7 @@ function NestedList({setCreateProjectModal}) {
             { !isFetching? 
               (Object.keys(projectsObject).length? (Object.keys(projectsObject).map((projectId, index) => {
                 return (
-                  <ListItemButton sx={{ pl: 4 }} key={index}>
+                  <ListItemButton sx={{ pl: 4 }} key={index} onClick={() => navigate(`project/${projectsObject[projectId]['_id']}`)}>
                     <ListItemIcon>
                       <StarBorder />
                     </ListItemIcon>

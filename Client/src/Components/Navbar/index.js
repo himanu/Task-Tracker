@@ -22,7 +22,7 @@ const settings = ['Profile', 'Logout'];
 
 const ResponsiveAppBar = () => {
   const navigate = useNavigate();
-  const {isAuthed, user} = useSelector(getAuthState);
+  const {isAuthed, user, status} = useSelector(getAuthState);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const dispatch = useDispatch();
