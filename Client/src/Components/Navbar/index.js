@@ -17,7 +17,7 @@ import { getAuthState } from '../../Store/Selectors/Auth';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../Store/Slices/Auth';
 
-const pages = ['Dashboard', 'About'];
+const pages = [{title: 'Dashboard', route: 'Dashboard/app'}, {title: 'About', route: 'About'}];
 const settings = ['Profile', 'Logout'];
 
 const ResponsiveAppBar = () => {
@@ -92,8 +92,8 @@ const ResponsiveAppBar = () => {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page} onClick={() => {navigate(`/${page}`);handleCloseNavMenu();}}>
-                    <Typography textAlign="center" sx={{color: '#727272'}}>{page}</Typography>
+                  <MenuItem key={page.title} onClick={() => {navigate(`/${page.route}`);handleCloseNavMenu();}}>
+                    <Typography textAlign="center" sx={{color: '#727272'}}>{page.title}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
@@ -109,11 +109,11 @@ const ResponsiveAppBar = () => {
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {pages.map((page) => (
                 <Button
-                  key={page}
-                  onClick={() => {navigate(`/${page}`);handleCloseNavMenu();}}
+                  key={page.title}
+                  onClick={() => {navigate(`/${page.route}`);handleCloseNavMenu();}}
                   sx={{ my: 2, color: '#fff', display: 'block', fontSize: '0.75rem' }}
                 >
-                  {page}
+                  {page.title}
                 </Button>
               ))}
             </Box>
