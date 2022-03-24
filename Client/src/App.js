@@ -4,10 +4,12 @@ import {signIn} from './Store/Slices/Auth';
 import { Routes, Route} from 'react-router-dom';
 import Welcome from './Components/Welcome';
 import Login from './Components/Auth/Login';
-import Dashboard from './Components/Dashboard';
+import Dashboard from './Components/Dashboard/drawer';
+import Project from './Components/Dashboard/Project';
 import Navbar from './Components/Navbar';
 import About from './Components/About';
 import Private from './Private';
+import DashboardApp from './Components/Dashboard/App';
 function App() {
     const dispatch = useDispatch();
     useEffect(()=>{
@@ -19,6 +21,8 @@ function App() {
 
     return (
         <div className="rootComponent" style={{display: 'flex', background: '#f6f8f9',minHeight: '100vh', flexDirection: 'column'}}>
+            
+            <Navbar />
             <Routes>
                 <Route 
                     path = '/login' 
@@ -28,26 +32,29 @@ function App() {
                         </Private>
                     }  
                 />
-                <Route path="" element={<Navbar />}>
                     
-                    <Route path="/" element={<Welcome/>} />
-                    <Route 
-                        path='/dashboard' 
-                        element={
-                            <Private>
-                                <Dashboard />
-                            </Private>
-                        } 
-                    />
-                    <Route 
-                        path='/about' 
-                        element={
-                            <Private>
-                                <About />
-                            </Private>
-                        }     
-                    />
+                <Route path="/" element={<Welcome/>} />
+
+                <Route 
+                    path='dashboard' 
+                    element={
+                        <Private>
+                            <Dashboard />
+                        </Private>
+                    } 
+                >
+                    <Route path='app' element={<DashboardApp />}/>
+                    <Route path='project/*' element={<Project />} />
                 </Route>
+
+                <Route 
+                    path='/about' 
+                    element={
+                        <Private>
+                            <About />
+                        </Private>
+                    }     
+                />
             </Routes>
         </div>
 

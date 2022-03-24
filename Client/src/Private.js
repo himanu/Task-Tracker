@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { signIn } from "./Store/Slices/Auth";
 import Login from "./Components/Auth/Login";
 import { CircularProgress } from "@mui/material";
+import { Outlet } from "react-router-dom";
 const Private = ({ children }) => {
     const dispatch = useDispatch();
     const {tokenId, status, isAuthed} =  useSelector((state)=> state.auth, shallowEqual);
@@ -16,6 +17,7 @@ const Private = ({ children }) => {
         return (
             <div style={{display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center'}}>
                 {children}
+                <Outlet />
             </div>
         )
     } else if(status === 'failed' || (status === 'idle' && !tokenId)){
