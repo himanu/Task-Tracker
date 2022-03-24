@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api";
-function noOfProjects(projectsObject) {
-  return Object.keys(projectsObject).length;
-}
+
 export const getProjects = createAsyncThunk('getProjects', async(_, {rejectWithValue})=> {
   try {
     const {data: projectsObject} = await api.getProjects();
@@ -26,11 +24,10 @@ export const addProject = createAsyncThunk('addProject', async(project_name, {ge
   try {
     const {data: project} = await api.addProject(project_name);
     const projectsObject = getState().projects.projectsObject;
-    const idOfNewObject = noOfProjects(projectsObject);
     console.log('project ', project);
     return {
       ...projectsObject,
-      [idOfNewObject]: project
+      [project._id]: project
     };
   } catch(error) {
     if(error.response) {
