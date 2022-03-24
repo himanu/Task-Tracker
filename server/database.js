@@ -57,10 +57,8 @@ const db = {
       userEmail: email
     })
     const projectsObject = {};
-    let idx = 0;
     await projectsCursor.forEach((project) => {
-      projectsObject[idx] = project;
-      idx++;
+      projectsObject[project._id] = project;
     })
     return projectsObject;
   }
