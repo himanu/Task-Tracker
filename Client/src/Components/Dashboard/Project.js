@@ -6,12 +6,14 @@ function getProjectId() {
 }
 
 export default function Project() {
-  const {projectsObject} = useSelector((state) => state.projects);
   const projectId = getProjectId();
+  const {projectsObject} = useSelector((state) => state.projects);
+  const project = projectsObject[projectId];
+  console.log('Project ', project);
   return (
     <div>
-      <div style={{fontSize: '1.25rem'}}>
-        
+      <div style={{fontSize: '1.25rem', fontWeight: 500}}>
+        {project.project_name}
       </div>
     </div>
   )
