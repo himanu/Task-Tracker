@@ -76,16 +76,14 @@ function NestedList({setCreateProjectModal}) {
   );
 }
 
-export default function ProjectDrawer({projects, projectLoaded, error}) {
+export default function ProjectDrawer() {
   const dispatch = useDispatch();
   const [project_name, setProject_Name] = useState('');
   const {user} = useSelector((state) => state.auth);
   const [createProjectModal, setCreateProjectModal] = useState(false);
 
   useEffect(() => {
-    if(user) {
-      dispatch(getProjects());
-    }
+    dispatch(getProjects());
   }, []);
 
   const handleAddProject = async() => {
@@ -106,7 +104,7 @@ export default function ProjectDrawer({projects, projectLoaded, error}) {
             }
           }}
         >
-          {<NestedList projects={projects} projectLoaded={projectLoaded} error={error} setCreateProjectModal={setCreateProjectModal}/>}
+          {<NestedList setCreateProjectModal={setCreateProjectModal}/>}
         </Drawer>
       </React.Fragment>
       <Modal
