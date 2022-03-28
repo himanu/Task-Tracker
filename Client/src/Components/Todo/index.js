@@ -36,15 +36,15 @@ const Todo = () => {
 
     const tasks = [];
     return (
-        <div style={{width: '60%', background: '#fff', padding: '1rem',flex: '1', margin: '0 auto'}}>
-            <div>
+        <div style={{width: '100%', background: '#fff', padding: '1rem',flex: '1', margin: '0 auto'}}>
+            {/* <div>
                 <div>
                     <span style={{fontSize: '1rem', fontWeight: 'bold'}}> Today </span> <span style={{fontSize: '0.8rem', color: '#727272'}}> {new Date().toDateString()} </span>
                 </div>
                 <div>
                     <span style={{fontSize: '0.8rem'}}> Welcome {(user.name).split(' ')[0]} 🤗, plan your day. </span>
                 </div>
-            </div>
+            </div> */}
             { visibilityAddTaskForm === 'closed' && (
                 <div style={{margin: '1rem 0'}}>
                     <div className={styles.addTask} onClick={() => setVisibilityAddTaskForm('open')}>

@@ -15,7 +15,7 @@ const Private = ({ children }) => {
     },[]);
     if(isAuthed) {
         return (
-            <div style={{display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center'}}>
+            <div style={{display: 'flex'}}>
                 {children}
                 <Outlet />
             </div>

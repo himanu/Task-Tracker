@@ -100,7 +100,7 @@ export default function ProjectDrawer() {
           anchor="left"
           sx={{
             '& .MuiPaper-root': {
-              top: '80px'
+              position: 'relative'
             }
           }}
         >
