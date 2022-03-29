@@ -92,7 +92,7 @@ export default function ProjectDrawer() {
   }
 
   return (
-    <div>
+    <div style={{background: '#fff', borderRight: '1px solid rgba(0, 0, 0, 0.12)'}}>
       <React.Fragment>
         <Drawer 
           open={true} 
@@ -100,7 +100,8 @@ export default function ProjectDrawer() {
           anchor="left"
           sx={{
             '& .MuiPaper-root': {
-              position: 'relative'
+              position: 'relative',
+              border: '0'
             }
           }}
         >
