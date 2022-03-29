@@ -1,14 +1,11 @@
 import { CircularProgress } from "@mui/material";
 import { useSelector } from "react-redux";
 import Todo from "../Todo";
-
-function getProjectId() {
-  const queryParams = new URLSearchParams(window.location.search);
-  return queryParams.get('projectId');
-}
+import {useParams} from 'react-router-dom';
 
 export default function Project() {
-  const projectId = getProjectId();
+  let params = useParams();
+  const projectId = params.projectId;;
   const {projectsObject} = useSelector((state) => state.projects);
   const project = projectsObject[projectId];
 
@@ -20,7 +17,7 @@ export default function Project() {
     )
   }
   return (
-    <div>
+    <div style={{flex: 1, padding: '1rem'}}>
       <div style={{fontSize: '1.25rem', fontWeight: 500}}>
         {project && project.project_name}
       </div>

@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { getAuthState } from "../../Store/Selectors/Auth";
 import BackgroundImg from "./BackgroundImg";
 import AddIcon from '@mui/icons-material/Add';
 import styles from './style.module.css';
 import { CircularProgress } from "@mui/material";
 import api from "../../api";
 const Todo = () => {
-    const {user} = useSelector(getAuthState);
     const [visibilityAddTaskForm, setVisibilityAddTaskForm] = useState('closed');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');

@@ -52,7 +52,7 @@ function NestedList({setCreateProjectModal}) {
             { !isFetching? 
               (Object.keys(projectsObject).length? (Object.keys(projectsObject).map((projectId, index) => {
                 return (
-                  <ListItemButton sx={{ pl: 4 }} key={index} onClick={() => navigate(`project?projectId=${projectsObject[projectId]['_id']}`)}>
+                  <ListItemButton sx={{ pl: 4 }} key={index} onClick={() => navigate(`project/${projectsObject[projectId]['_id']}`)}>
                     <ListItemIcon>
                       <StarBorder />
                     </ListItemIcon>
