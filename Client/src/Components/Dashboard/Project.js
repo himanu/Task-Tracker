@@ -17,7 +17,7 @@ export default function Project() {
     )
   }
   return (
-    <div style={{flex: 1, padding: '1rem'}}>
+    <div style={{flex: 1, padding: '1rem', display: 'flex', flexDirection: 'column'}}>
       <div style={{fontSize: '1.25rem', fontWeight: 500}}>
         {project && project.project_name}
       </div>
