@@ -1,12 +1,18 @@
 .addTask {
     display: flex;
     cursor: pointer;
+    align-items: center;
     gap: 1rem
 }
+
 .addTask:hover .addIcon {
     color: #fff;
-    background-color: #3d3d3d;
+    background-color: rgb(29, 155, 240);
     border-radius: 50%;
+}
+.addTask:hover .text {
+    color: rgb(29, 155, 240);
+    background-color: #fff;
 }
 .btn {
     font-size: 0.75rem;

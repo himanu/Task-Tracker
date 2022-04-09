@@ -4,7 +4,9 @@ import AddIcon from '@mui/icons-material/Add';
 import styles from './style.module.css';
 import { CircularProgress } from "@mui/material";
 import api from "../../api";
+import { useSelector } from "react-redux";
 const Todo = () => {
+    const {user} = useSelector((state) => state.auth);
     const [visibilityAddTaskForm, setVisibilityAddTaskForm] = useState('closed');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -31,22 +33,33 @@ const Todo = () => {
         });
     } 
 
-    const tasks = [];
+    const tasks = ['Hello'];
     return (
         <div style={{width: '100%', background: '#fff', padding: '1rem',flex: '1', margin: '0 auto'}}>
-            {/* <div>
+            <div>
                 <div>
                     <span style={{fontSize: '1rem', fontWeight: 'bold'}}> Today </span> <span style={{fontSize: '0.8rem', color: '#727272'}}> {new Date().toDateString()} </span>
                 </div>
                 <div>
-                    <span style={{fontSize: '0.8rem'}}> Welcome {(user.name).split(' ')[0]} 🤗, plan your day. </span>
+                    <span style={{fontSize: '0.8rem'}}> Welcome {user.name} 🤗, plan your project. </span>
                 </div>
-            </div> */}
+            </div>
+            <div>
+                {tasks.map((task, idx) => {
+                    return (
+                        <div>
+                            {task}
+                        </div>
+                    )
+                })}
+            </div>
             { visibilityAddTaskForm === 'closed' && (
-                <div style={{margin: '1rem 0'}}>
+                <div style={{margin: '0.5rem 0', padding: '0.5rem', border: '1.5px solid #ccc'}}>
                     <div className={styles.addTask} onClick={() => setVisibilityAddTaskForm('open')}>
                         <AddIcon className={styles.addIcon}/>
-                        Add Task
+                        <span className={styles.text}>
+                            Add Task
+                        </span>
                     </div>
                 </div>
             )}
