@@ -4,7 +4,7 @@ import {signIn} from './Store/Slices/Auth';
 import { Routes, Route} from 'react-router-dom';
 import Welcome from './Components/Welcome';
 import Login from './Components/Auth/Login';
-import Dashboard from './Components/Dashboard/drawer';
+import DashboardSidebar from './Components/Dashboard/Sidebar';
 import Project from './Components/Dashboard/Project';
 import Navbar from './Components/Navbar';
 import About from './Components/About';
@@ -39,7 +39,7 @@ function App() {
                     path='dashboard' 
                     element={
                         <Private>
-                            <Dashboard />
+                            <DashboardSidebar />
                         </Private>
                     } 
                 >
