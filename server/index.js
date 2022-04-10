@@ -30,12 +30,12 @@ app.get('/signIn', verifyToken, async(req,res)=>{
         });
     }
 })
-app.get('/validateTokenId', verifyToken, async(req,res) => {
-    const payload = req.auth;
-    res.status(200).send({
-        payload
-    })
-})
+// app.get('/validateTokenId', verifyToken, async(req,res) => {
+//     const payload = req.auth;
+//     res.status(200).send({
+//         payload
+//     })
+// })
 app.get('/projects', verifyToken, async(req, res) => {
     const {email} = req.auth;
     const projectsObject = await db.getProjects(email);
