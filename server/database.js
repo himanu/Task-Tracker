@@ -1,5 +1,5 @@
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://himanshu:vyCSGizSAW9atSf@cluster0.zmg0v.mongodb.net/Todoist?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -61,6 +61,24 @@ const db = {
       projectsObject[project._id] = project;
     })
     return projectsObject;
+  }, 
+  async addTask({projectId, taskHeading, taskDescription}) {
+    await connectTheClient();
+    const {value: updatedProject} = await client.db().collection('projects').findOneAndUpdate(
+      {
+        _id: (projectId),
+      }, {
+        $push: {
+          tasks: {
+            taskHeading,
+            taskDescription
+          }
+        }
+      }, {
+        returnDocument: 'after'
+      }
+    )
+    return updatedProject
   }
 }
 module.exports = { db };

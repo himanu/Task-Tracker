@@ -45,6 +45,22 @@ app.post('/projects', verifyToken, async(req, res) => {
     res.send(project);
 })
 
+app.post('/task', verifyToken, async(req, res) => {
+    try {
+        const updatedProject = await db.addTask(req.body);
+        if(!updatedProject) {
+            return res.status(403).send("Not found");
+        }
+        console.log('Updated Project ', updatedProject);
+        res.status(200).send({
+            ok: true
+        })
+    } catch(err) {
+        res.status(400).send({
+            err: err.message
+        })
+    }
+})
 
 app.listen(4000,()=>{
     console.log("live");
