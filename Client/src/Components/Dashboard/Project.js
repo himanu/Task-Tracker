@@ -1,6 +1,6 @@
 import { CircularProgress } from "@mui/material";
 import { useSelector } from "react-redux";
-import Todo from "../Todo";
+import Tasks from "../Tasks";
 import {useParams} from 'react-router-dom';
 
 export default function Project() {
@@ -24,7 +24,7 @@ export default function Project() {
       <div>
         <h6>Tasks</h6>
       </div>
-      {project.tasks.length === 0 && <Todo />}
+      {<Tasks />}
     </div>
   )
 }
