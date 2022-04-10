@@ -20,10 +20,14 @@ app.get('/signIn', verifyToken, async(req,res)=>{
         const payload = req.auth;
         await db.signInUser(payload);
         const {email, name, picture} = payload;
-        res.status(200).send({user: {email, name, picture}});
+        res.status(200).send({
+            user: {email, name, picture}
+        });
     } catch(err) {
         console.log('Error occured ', err.message);
-        res.status(500).send('Mongodb database error');
+        res.status(500).send({
+            error: err.message
+        });
     }
 })
 app.get('/validateTokenId', verifyToken, async(req,res) => {
@@ -49,15 +53,17 @@ app.post('/task', verifyToken, async(req, res) => {
     try {
         const updatedProject = await db.addTask(req.body);
         if(!updatedProject) {
-            return res.status(403).send("Not found");
+            return res.status(404).send({
+                error: `Project with id:${req.body.projectId} doesn't exist`
+            });
         }
         console.log('Updated Project ', updatedProject);
-        res.status(200).send({
+        res.status(201).send({
             data: updatedProject
         })
     } catch(err) {
-        res.status(400).send({
-            err: err.message
+        res.status(500).send({
+            error: err.message
         })
     }
 })
