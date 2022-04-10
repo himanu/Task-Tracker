@@ -53,7 +53,7 @@ app.post('/task', verifyToken, async(req, res) => {
         }
         console.log('Updated Project ', updatedProject);
         res.status(200).send({
-            ok: true
+            data: updatedProject
         })
     } catch(err) {
         res.status(400).send({

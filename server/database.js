@@ -66,7 +66,7 @@ const db = {
     await connectTheClient();
     const {value: updatedProject} = await client.db().collection('projects').findOneAndUpdate(
       {
-        _id: (projectId),
+        _id: new ObjectId(projectId),
       }, {
         $push: {
           tasks: {
