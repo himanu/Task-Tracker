@@ -64,21 +64,30 @@ const db = {
   }, 
   async addTask({projectId, taskHeading, taskDescription}) {
     await connectTheClient();
-    const {value: updatedProject} = await client.db().collection('projects').findOneAndUpdate(
-      {
-        _id: new ObjectId(projectId),
-      }, {
-        $push: {
-          tasks: {
-            taskHeading,
-            taskDescription
-          }
-        }
-      }, {
-        returnDocument: 'after'
-      }
-    )
-    return updatedProject
+    const task = await client.db().collection('tasks').insertOne({
+      taskHeading,
+      taskDescription,
+      parentProject: projectId,
+      completed: false
+    })
+    // const {value: updatedProject} = await client.db().collection('projects').findOneAndUpdate(
+    //   {
+    //     _id: new ObjectId(projectId),
+    //   }, {
+    //     $push: {
+    //       tasks: task.insertedId
+    //     }
+    //   }, {
+    //     returnDocument: 'after'
+    //   }
+    // )
+    return {
+      _id: task.insertedId,
+      taskHeading,
+      taskDescription,
+      parentProject: projectId,
+      completed: false
+    }
   }
 }
 module.exports = { db };
