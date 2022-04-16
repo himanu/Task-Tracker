@@ -24,7 +24,7 @@ export default function Project() {
       <div>
         <h6>Tasks</h6>
       </div>
-      {<Tasks />}
+      {<Tasks tasks={project.tasks} />}
     </div>
   )
 }
