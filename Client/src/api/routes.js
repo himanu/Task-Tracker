@@ -1,6 +1,6 @@
 const routes = {
     signIn: 'signIn',
-    addTask: 'tasks/add',
+    tasks: 'task',
     projects: 'projects'
 }
 export default routes;

@@ -16,9 +16,7 @@ const api = {
             return Promise.reject('Authentication Failed');
         }
         
-        return axiosInstance.post(routes.addTask, {
-            task
-        }, {
+        return axiosInstance.post(routes.tasks, task, {
             headers: {
                 'Authorization': `Bearer ${tokenId}`
             }
