@@ -17,9 +17,11 @@ export const addTask = createAsyncThunk('addTask', async({projectId, taskHeading
   console.log('task ', task);
   const tasksObject = getState().tasks.tasksObject;
   return {
+    task,
+    updatedTaskObject: {
     ...tasksObject,
     [task._id]: task
-  }
+  }}
 })
 
 export const getTasks = createAsyncThunk('getTasks', async() => {
@@ -63,7 +65,7 @@ const TaskSlice = createSlice({
         return {
           ...state,
           isFetching: false,
-          tasksObject: action.payload,
+          tasksObject: action.payload.updatedTaskObject,
           error: ''
         }
       })

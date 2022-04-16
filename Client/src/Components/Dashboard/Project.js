@@ -24,7 +24,7 @@ export default function Project() {
       <div>
         <h6>Tasks</h6>
       </div>
-      {project && <Tasks tasksIds={project.tasks} projectId={projectId}/>}
+      {project && <Tasks projectId={projectId}/>}
     </div>
   )
 }

@@ -99,7 +99,8 @@ const projectsSlice = createSlice({
         }
       })
       .addCase(addTask.fulfilled,(state, action) => {
-        const projectId = action.payload.parentProject, taskId = action.payload._id;
+        const { task } = action.payload;
+        const projectId = task.parentProject, taskId = task._id;
         const updatedProjectsObject = {
           ...state.projectsObject,
           [projectId]: {

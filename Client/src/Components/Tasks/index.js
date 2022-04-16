@@ -5,9 +5,15 @@ import styles from './style.module.css';
 import { CircularProgress } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { addTask } from "../../Store/Slices/Tasks";
-const Todo = ({tasksIds, projectId}) => {
+const Todo = ({projectId}) => {
     const {user} = useSelector((state) => state.auth);
     const tasksObject = useSelector((state) => state.tasks.tasksObject);
+    const {projectsObject} = useSelector((state) => state.projects);
+
+
+    console.log('projectsObject in task component', projectsObject);
+    console.log('taskObject ', tasksObject);
+    const tasksIds = projectsObject[projectId]['tasks'];
     const dispatch = useDispatch();
     const [visibilityAddTaskForm, setVisibilityAddTaskForm] = useState('closed');
     const [title, setTitle] = useState('');
@@ -21,13 +27,16 @@ const Todo = ({tasksIds, projectId}) => {
             projectId,
             taskHeading: title,
             taskDescription: description
-        })).then(() => {
+        })).then((res) => {
+            console.log('res ', res);
             setLoading(false);
             setVisibilityAddTaskForm('closed');
         }).catch((err) => {
+            console.log('err ', err);
             setError(err.message);
         })
-        .then(() => {
+        .then((res) => {
+            console.log('res1 ', res);
             setLoading(false);
             setTitle('');
             setDescription('');
