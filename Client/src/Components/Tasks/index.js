@@ -3,7 +3,6 @@ import BackgroundImg from "./BackgroundImg";
 import AddIcon from '@mui/icons-material/Add';
 import styles from './style.module.css';
 import { CircularProgress } from "@mui/material";
-import api from "../../api";
 import { useSelector, useDispatch } from "react-redux";
 import { addTask } from "../../Store/Slices/Tasks";
 const Todo = ({tasksIds, projectId}) => {
