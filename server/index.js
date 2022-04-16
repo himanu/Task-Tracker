@@ -49,17 +49,12 @@ app.post('/projects', verifyToken, async(req, res) => {
     res.send(project);
 })
 
-app.post('/task', verifyToken, async(req, res) => {
+app.post('/tasks', verifyToken, async(req, res) => {
     try {
-        const updatedProject = await db.addTask(req.body);
-        if(!updatedProject) {
-            return res.status(404).send({
-                error: `Project with id:${req.body.projectId} doesn't exist`
-            });
-        }
-        console.log('Updated Project ', updatedProject);
+        const task = await db.addTask(req.body);
+        console.log('task ', task);
         res.status(201).send({
-            data: updatedProject
+            task
         })
     } catch(err) {
         res.status(500).send({
