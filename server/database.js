@@ -70,17 +70,17 @@ const db = {
       parentProject: projectId,
       completed: false
     })
-    // const {value: updatedProject} = await client.db().collection('projects').findOneAndUpdate(
-    //   {
-    //     _id: new ObjectId(projectId),
-    //   }, {
-    //     $push: {
-    //       tasks: task.insertedId
-    //     }
-    //   }, {
-    //     returnDocument: 'after'
-    //   }
-    // )
+    await client.db().collection('projects').findOneAndUpdate(
+      {
+        _id: new ObjectId(projectId),
+      }, {
+        $push: {
+          tasks: task.insertedId
+        }
+      }, {
+        returnDocument: 'after'
+      }
+    )
     return {
       _id: task.insertedId,
       taskHeading,
