@@ -1,7 +1,11 @@
 import api from '../../api';
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
-const initialState = {};
-export const addTask = createAsyncThunk('addTask', async({projectId, taskHeading, taskDescription}) => {
+const initialState = {
+  isFetching: false,
+  error: '',
+  tasksObject: {}
+};
+export const addTask = createAsyncThunk('addTask', async({projectId, taskHeading, taskDescription}, {getState}) => {
   const {data: {
     task
   }} = await api.addTask({
@@ -9,12 +13,68 @@ export const addTask = createAsyncThunk('addTask', async({projectId, taskHeading
     taskHeading,
     taskDescription
   });
+  
   console.log('task ', task);
-  return task;
+  const tasksObject = getState().tasks.tasksObject;
+  return {
+    ...tasksObject,
+    [task._id]: task
+  }
+})
+
+export const getTasks = createAsyncThunk('getTasks', async() => {
+  const {data: tasksObject} = await api.getTasks();
+  return tasksObject;
 })
 const TaskSlice = createSlice({
   name: 'Tasks',
   initialState,
+  extraReducers: (builders) => {
+    builders
+      .addCase(getTasks.pending, (state, action) => {
+        return {
+          ...state,
+          isFetching: true,
+          error: ''
+        }
+      })
+      .addCase(getTasks.fulfilled, (state, action) => {
+        return {
+          ...state,
+          isFetching: false,
+          tasksObject: action.payload,
+        }
+      })
+      .addCase(getTasks.rejected, (state, action) => {
+        return {
+          ...state,
+          isFetching: false,
+          error: action.payload
+        }
+      })
+      .addCase(addTask.pending, (state, action) => {
+        return {
+          ...state,
+          isFetching: true,
+          error: ''
+        }
+      })
+      .addCase(addTask.fulfilled, (state, action) => {
+        return {
+          ...state,
+          isFetching: false,
+          tasksObject: action.payload,
+          error: ''
+        }
+      })
+      .addCase(addTask.rejected, (state, action) => {
+        return {
+          ...state,
+          isFetching: false,
+          error: action.payload
+        }
+      })
+  }
 });
 
 export default TaskSlice.reducer;
