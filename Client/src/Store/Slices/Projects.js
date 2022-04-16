@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api";
+import {addTask} from './Tasks';
 
 export const getProjects = createAsyncThunk('getProjects', async(_, {rejectWithValue})=> {
   try {
@@ -95,6 +96,21 @@ const projectsSlice = createSlice({
           ...state,
           isFetching: false,
           error: action.payload,
+        }
+      })
+      .addCase(addTask.fulfilled,(state, action) => {
+        const projectId = action.payload.parentProject, taskId = action.payload._id;
+        const updatedProjectsObject = {
+          ...state.projectsObject,
+          [projectId]: {
+            ...state.projectsObject[projectId],
+            tasks: [...state.projectsObject[projectId]['tasks'], taskId]
+          }
+        }
+
+        return {
+          ...state,
+          projectsObject: updatedProjectsObject
         }
       })
   }
