@@ -4,9 +4,12 @@ import AddIcon from '@mui/icons-material/Add';
 import styles from './style.module.css';
 import { CircularProgress } from "@mui/material";
 import api from "../../api";
-import { useSelector } from "react-redux";
-const Todo = () => {
+import { useSelector, useDispatch } from "react-redux";
+import { addTask } from "../../Store/Slices/Tasks";
+const Todo = ({tasksIds, projectId}) => {
     const {user} = useSelector((state) => state.auth);
+    const tasksObject = useSelector((state) => state.tasks.tasksObject);
+    const dispatch = useDispatch();
     const [visibilityAddTaskForm, setVisibilityAddTaskForm] = useState('closed');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -15,25 +18,43 @@ const Todo = () => {
     
     function addTaskHandler() {
         setLoading(true);
-        // request server to add task
-        api.addTask({title, description})
-        .then((res) => {
+        dispatch(addTask({
+            projectId,
+            taskHeading: title,
+            taskDescription: description
+        })).then(() => {
             setLoading(false);
             setVisibilityAddTaskForm('closed');
-            console.log('res ', res);
-        })
-        .catch((err) => {
-            console.log('err ', err);
+        }).catch((err) => {
             setError(err.message);
         })
         .then(() => {
             setLoading(false);
             setTitle('');
             setDescription('');
-        });
+        })
+        // setLoading(true);
+        // // request server to add task
+        // api.addTask({
+        //     projectId, 
+        //     taskHeading: title, 
+        //     taskDescription: description})
+        // .then((res) => {
+        //     setLoading(false);
+        //     setVisibilityAddTaskForm('closed');
+        //     console.log('res ', res);
+        // })
+        // .catch((err) => {
+        //     console.log('err ', err);
+        //     setError(err.message);
+        // })
+        // .then(() => {
+        //     setLoading(false);
+        //     setTitle('');
+        //     setDescription('');
+        // });
     } 
 
-    const tasks = ['Hello'];
     return (
         <div style={{width: '100%', background: '#fff', padding: '1rem',flex: '1', margin: '0 auto'}}>
             <div>
@@ -45,10 +66,10 @@ const Todo = () => {
                 </div>
             </div>
             <div>
-                {tasks.map((task, idx) => {
+                {tasksIds.map((taskId, idx) => {
                     return (
                         <div>
-                            {task}
+                            {tasksObject[taskId]['taskHeading']}
                         </div>
                     )
                 })}
@@ -64,7 +85,7 @@ const Todo = () => {
                 </div>
             )}
 
-            { (visibilityAddTaskForm === 'closed' && tasks.length === 0) && (
+            { (visibilityAddTaskForm === 'closed' && tasksIds.length === 0) && (
                 <div style={{textAlign: 'center'}}>
                     <BackgroundImg />
                     <div style={{fontSize: '0.8rem'}}>Get a clear view of the day ahead.</div>
