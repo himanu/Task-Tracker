@@ -88,6 +88,17 @@ const db = {
       parentProject: projectId,
       completed: false
     }
+  },
+  async getTasks(projectId) {
+    await connectTheClient();
+    const projectsCursor = await client.db().collection('tasks').find({
+      parentProject: projectId
+    })
+    const tasksObject = {};
+    await projectsCursor.forEach((task) => {
+      tasksObject[task._id] = task;
+    })
+    return tasksObject;
   }
 }
 module.exports = { db };

@@ -48,7 +48,11 @@ app.post('/projects', verifyToken, async(req, res) => {
     const project = await db.addProject(email, project_name);
     res.send(project);
 })
-
+app.get('/tasks:projectId', verifyToken, async(req, res) => {
+    const projectId = req.params.projectId;
+    const tasksObject = await db.getTasks(projectId);
+    res.send(tasksObject);
+})
 app.post('/tasks', verifyToken, async(req, res) => {
     try {
         const task = await db.addTask(req.body);

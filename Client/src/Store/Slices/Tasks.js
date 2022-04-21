@@ -24,8 +24,8 @@ export const addTask = createAsyncThunk('addTask', async({projectId, taskHeading
   }}
 })
 
-export const getTasks = createAsyncThunk('getTasks', async() => {
-  const {data: tasksObject} = await api.getTasks();
+export const getTasks = createAsyncThunk('getTasks', async(projectId) => {
+  const {data: tasksObject} = await api.getTasks(projectId);
   return tasksObject;
 })
 const TaskSlice = createSlice({

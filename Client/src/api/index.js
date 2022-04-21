@@ -46,6 +46,17 @@ const api = {
                 }
             }
         );
+    }, 
+    getTasks(projectId) {
+        const tokenId = JSON.parse(localStorage.getItem('tokenId'));
+        if(!tokenId) {
+            throw new Error('Authentication Failed');
+        }
+        return axiosInstance.get(routes.tasks + `/${projectId}`, {
+            headers: {
+                'Authorization': `Bearer ${tokenId}`
+            }
+        })
     }
 };
 export default api;

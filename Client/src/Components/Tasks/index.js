@@ -1,20 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BackgroundImg from "./BackgroundImg";
 import AddIcon from '@mui/icons-material/Add';
 import styles from './style.module.css';
 import { CircularProgress } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { addTask } from "../../Store/Slices/Tasks";
+import { addTask, getTasks } from "../../Store/Slices/Tasks";
 const Todo = ({projectId}) => {
-    const {user} = useSelector((state) => state.auth);
-    const tasksObject = useSelector((state) => state.tasks.tasksObject);
-    const {projectsObject} = useSelector((state) => state.projects);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getTasks(projectId));
+    }, [])
+
+    const { user } = useSelector((state) => state.auth);
+    const { tasksObject, isFetching } = useSelector((state) => state.tasks);
+    const { projectsObject } = useSelector((state) => state.projects);
 
 
     console.log('projectsObject in task component', projectsObject);
     console.log('taskObject ', tasksObject);
     const tasksIds = projectsObject[projectId]['tasks'];
-    const dispatch = useDispatch();
     const [visibilityAddTaskForm, setVisibilityAddTaskForm] = useState('closed');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -74,13 +79,13 @@ const Todo = ({projectId}) => {
                 </div>
             </div>
             <div>
-                {tasksIds.map((taskId, idx) => {
+                {/* {!isFetching && tasksIds.map((taskId, idx) => {
                     return (
                         <div>
                             {tasksObject[taskId]['taskHeading']}
                         </div>
                     )
-                })}
+                })} */}
             </div>
             { visibilityAddTaskForm === 'closed' && (
                 <div style={{margin: '0.5rem 0', padding: '0.5rem', border: '1.5px solid #ccc'}}>
