@@ -10,7 +10,7 @@ const Todo = ({projectId}) => {
 
     useEffect(() => {
         dispatch(getTasks(projectId));
-    }, [])
+    }, [projectId])
 
     const { user } = useSelector((state) => state.auth);
     const { tasksObject, isFetching } = useSelector((state) => state.tasks);
@@ -79,13 +79,13 @@ const Todo = ({projectId}) => {
                 </div>
             </div>
             <div>
-                {/* {!isFetching && tasksIds.map((taskId, idx) => {
+                {Object.keys(tasksObject).length ? tasksIds.map((taskId, idx) => {
                     return (
-                        <div>
+                        <div style={{padding: '5px', background: 'rgb(246, 248, 249)', margin: '5px 0', cursor: 'pointer'}}>
                             {tasksObject[taskId]['taskHeading']}
                         </div>
                     )
-                })} */}
+                }): (<>Loading</>)}
             </div>
             { visibilityAddTaskForm === 'closed' && (
                 <div style={{margin: '0.5rem 0', padding: '0.5rem', border: '1.5px solid #ccc'}}>
