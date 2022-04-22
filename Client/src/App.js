@@ -27,9 +27,9 @@ function App() {
                 <Route 
                     path = '/login' 
                     element = {
-                        <Private>
-                            <Login />
-                        </Private>
+                        // <Private>
+                        <Login />
+                        // </Private>
                     }  
                 />
                     

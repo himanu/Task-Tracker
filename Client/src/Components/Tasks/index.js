@@ -5,20 +5,19 @@ import styles from './style.module.css';
 import { CircularProgress } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { addTask, getTasks } from "../../Store/Slices/Tasks";
+import { useNavigate } from 'react-router-dom';
 const Todo = ({projectId}) => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(getTasks(projectId));
     }, [projectId])
 
     const { user } = useSelector((state) => state.auth);
-    const { tasksObject, isFetching } = useSelector((state) => state.tasks);
+    const { tasksObject } = useSelector((state) => state.tasks);
     const { projectsObject } = useSelector((state) => state.projects);
 
-
-    console.log('projectsObject in task component', projectsObject);
-    console.log('taskObject ', tasksObject);
     const tasksIds = projectsObject[projectId]['tasks'];
     const [visibilityAddTaskForm, setVisibilityAddTaskForm] = useState('closed');
     const [title, setTitle] = useState('');
@@ -34,6 +33,9 @@ const Todo = ({projectId}) => {
             taskDescription: description
         })).then((res) => {
             console.log('res ', res);
+            if(res.error && res.payload === 'Authentication Failed') {
+                return navigate(`/login?onSuccess=${window.location.pathname}`);
+            }
             setLoading(false);
             setVisibilityAddTaskForm('closed');
         }).catch((err) => {

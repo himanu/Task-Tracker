@@ -30,12 +30,7 @@ app.get('/signIn', verifyToken, async(req,res)=>{
         });
     }
 })
-// app.get('/validateTokenId', verifyToken, async(req,res) => {
-//     const payload = req.auth;
-//     res.status(200).send({
-//         payload
-//     })
-// })
+
 app.get('/projects', verifyToken, async(req, res) => {
     const {email} = req.auth;
     const projectsObject = await db.getProjects(email);
@@ -54,6 +49,9 @@ app.get('/tasks/:projectId', verifyToken, async(req, res) => {
     res.send(tasksObject);
 })
 app.post('/tasks', verifyToken, async(req, res) => {
+    // res.status(401).send({
+    //     error: 'Authentication Failed'
+    // });
     try {
         const task = await db.addTask(req.body);
         console.log('task ', task);

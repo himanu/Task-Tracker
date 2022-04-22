@@ -5,23 +5,37 @@ const initialState = {
   error: '',
   tasksObject: {}
 };
-export const addTask = createAsyncThunk('addTask', async({projectId, taskHeading, taskDescription}, {getState}) => {
-  const {data: {
-    task
-  }} = await api.addTask({
-    projectId,
-    taskHeading,
-    taskDescription
-  });
-  
-  console.log('task ', task);
-  const tasksObject = getState().tasks.tasksObject;
-  return {
-    task,
-    updatedTaskObject: {
-    ...tasksObject,
-    [task._id]: task
-  }}
+export const addTask = createAsyncThunk('addTask', async({projectId, taskHeading, taskDescription}, {getState, rejectWithValue}) => {
+  try {
+    const {data: {
+      task
+    }} = await api.addTask({
+      projectId,
+      taskHeading,
+      taskDescription
+    })
+    
+    console.log('task ', task);
+    const tasksObject = getState().tasks.tasksObject;
+    return {
+      task,
+      updatedTaskObject: {
+      ...tasksObject,
+      [task._id]: task
+    }}
+  } catch(err) {
+    if(err.response) {
+      const {error} = err.response.data;
+      console.log('Yes ', err.response.data);
+      return rejectWithValue(error);
+    }else if(err.request) {
+      // client has sent a request but does not receive any response
+      return rejectWithValue(err.request);
+    } else {
+      // request not sent
+      return rejectWithValue(err.message);
+    }
+  }
 })
 
 export const getTasks = createAsyncThunk('getTasks', async(projectId) => {
@@ -73,7 +87,7 @@ const TaskSlice = createSlice({
         return {
           ...state,
           isFetching: false,
-          error: action.payload
+          error: 'Error '
         }
       })
   }
