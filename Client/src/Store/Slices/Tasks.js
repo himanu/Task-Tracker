@@ -27,7 +27,9 @@ export const addTask = createAsyncThunk('addTask', async({projectId, taskHeading
     if(err.response) {
       const {error} = err.response.data;
       console.log('Yes ', err.response.data);
-      return rejectWithValue(error);
+      if(error)
+        return rejectWithValue(error);
+      return rejectWithValue(err.response.data);
     }else if(err.request) {
       // client has sent a request but does not receive any response
       return rejectWithValue(err.request);

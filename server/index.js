@@ -49,9 +49,6 @@ app.get('/tasks/:projectId', verifyToken, async(req, res) => {
     res.send(tasksObject);
 })
 app.post('/tasks', verifyToken, async(req, res) => {
-    // res.status(401).send({
-    //     error: 'Authentication Failed'
-    // });
     try {
         const task = await db.addTask(req.body);
         console.log('task ', task);
