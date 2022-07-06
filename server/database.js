@@ -99,6 +99,42 @@ const db = {
       tasksObject[task._id] = task;
     })
     return tasksObject;
+  },
+  async updateTask(task) {
+    try {
+      await connectTheClient();
+      const updatedTask = await client.db().collection('tasks').findOneAndUpdate({
+        _id: new ObjectId(task._id)
+      },{
+        $set: {
+          taskHeading: task['taskHeading'],
+          taskDescription: task['taskDescription'],
+          completed: task['completed']
+        }
+      }, {
+        returnDocument: 'after'
+      }
+    );
+    return updatedTask;
+    } catch(err) {
+      console.log("Some error occured ", err);
+      throw err;
+    } 
+  },
+  async deleteTask({taskId, projectId}) {
+    await connectTheClient();
+    await client.db().collection('projects').updateOne({
+        _id: new ObjectId(projectId)
+      }, {
+        $pull: {
+          'tasks': new ObjectId(taskId)
+        }
+      }
+    )
+    await client.db().collection('tasks').deleteOne({
+      _id: new ObjectId(taskId)
+    })
+    
   }
 }
 module.exports = { db };

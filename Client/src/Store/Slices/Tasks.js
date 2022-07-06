@@ -44,9 +44,43 @@ export const getTasks = createAsyncThunk('getTasks', async(projectId) => {
   const {data: tasksObject} = await api.getTasks(projectId);
   return tasksObject;
 })
+
+export const deleteTask = createAsyncThunk('deleteTask', async({taskId, projectId}, {getState, rejectWithValue})=>{
+  const res = api.deleteTask(taskId, projectId);
+  return {taskId, projectId};
+})
+
 const TaskSlice = createSlice({
   name: 'Tasks',
   initialState,
+  reducers: {
+    updateTasksObject(state, action) {
+      const tasksObject = state.tasksObject;
+      const task = action.payload;
+      console.log('task in reducer ', task);
+      return {
+        ...state,
+        tasksObject: {
+          ...tasksObject,
+          [task._id]: task
+        }
+      }
+    },
+    // deleteTask(state, action) {
+    //   const tasksObject = state.tasksObject;
+    //   const {taskId} = action.payload;
+    //   let newTasksObject ={};
+    //   Object.keys(tasksObject).map((id) => {
+    //     if(id != taskId) {
+    //       newTasksObject[id] = tasksObject[id];
+    //     }
+    //   })
+    //   return {
+    //     ...state,
+    //     tasksObject: newTasksObject
+    //   }
+    // }
+  },
   extraReducers: (builders) => {
     builders
       .addCase(getTasks.pending, (state, action) => {
@@ -92,7 +126,22 @@ const TaskSlice = createSlice({
           error: 'Error '
         }
       })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        const tasksObject = state.tasksObject;
+        const {taskId} = action.payload;
+        let newTasksObject ={};
+        Object.keys(tasksObject).map((id) => {
+          if(id != taskId) {
+            newTasksObject[id] = tasksObject[id];
+          }
+        })
+        return {
+          ...state,
+          tasksObject: newTasksObject
+        }
+        })
   }
 });
 
 export default TaskSlice.reducer;
+export const {updateTasksObject} = TaskSlice.actions;

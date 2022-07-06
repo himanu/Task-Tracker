@@ -22,6 +22,28 @@ const api = {
             }
         })
     },
+    updateTask(task) {
+        const tokenId = JSON.parse(localStorage.getItem('tokenId'));
+        if(!tokenId) {
+            return Promise.reject('Authentication Failed');
+        }
+        return axiosInstance.post('task/updateTask', task, {
+            headers: {
+                'Authorization': `Bearer ${tokenId}`
+            }
+        })
+    },
+    deleteTask(taskId, projectId) {
+        const tokenId = JSON.parse(localStorage.getItem('tokenId'));
+        if(!tokenId) {
+            return Promise.reject('Authentication Failed');
+        }
+        return axiosInstance.delete(`task/deleteTask/?taskId=${taskId}&projectId=${projectId}`, {
+            headers: {
+                'Authorization': `Bearer ${tokenId}`
+            }
+        })
+    },
     getProjects() {
         const tokenId = JSON.parse(localStorage.getItem('tokenId'));
         if(!tokenId) {

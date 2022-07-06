@@ -61,6 +61,33 @@ app.post('/tasks', verifyToken, async(req, res) => {
         })
     }
 })
+app.post('/task/updateTask', verifyToken, async(req,res) => {
+    try {
+        const task = await (await db.updateTask(req.body)).value;
+        console.log('updated task ', task);
+        res.status(201).send({
+            task
+        })
+    } catch(err) {
+        res.status(500).send({
+            error: err.message
+        })
+    }
+})
+
+app.delete('/task/deleteTask', verifyToken, async(req,res) => {
+    try {
+        const taskId = req.query.taskId, projectId = req.query.projectId;
+        console.log('taskId ', taskId, ' projectId ', projectId);
+        await db.deleteTask({taskId, projectId});
+        res.status(201).send("Deleted")
+    } catch(err) {
+        console.log("Err ",err);
+        res.status(500).send({
+            error: err.message
+        })
+    }
+})
 
 app.listen(4000,()=>{
     console.log("live");

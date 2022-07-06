@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api";
-import {addTask} from './Tasks';
+import {addTask, deleteTask} from './Tasks';
 
 export const getProjects = createAsyncThunk('getProjects', async(_, {rejectWithValue})=> {
   try {
@@ -50,6 +50,9 @@ const projectsSlice = createSlice({
     isFetching: false,
     error: '',
     projectsObject: {}
+  },
+  reducers: {
+
   },
   extraReducers: (builders) => {
     builders
@@ -108,10 +111,27 @@ const projectsSlice = createSlice({
             tasks: [...state.projectsObject[projectId]['tasks'], taskId]
           }
         }
-
         return {
           ...state,
           projectsObject: updatedProjectsObject
+        }
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        const {taskId, projectId} = action.payload;
+        const tasks = state.projectsObject[projectId]['tasks'];
+        const newTasks = tasks.filter((id) => {
+          return id != taskId;
+        });
+        console.log("new tasks ", newTasks);
+        return {
+          ...state,
+          projectsObject: {
+            ...state.projectsObject,
+            [projectId]: {
+              ...state.projectsObject[projectId],
+              tasks: newTasks
+            }
+          }
         }
       })
   }

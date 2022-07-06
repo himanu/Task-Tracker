@@ -6,7 +6,8 @@ import { CircularProgress } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { addTask, getTasks } from "../../Store/Slices/Tasks";
 import { useNavigate } from 'react-router-dom';
-const Todo = ({projectId}) => {
+import TaskModal from "./TaskModal";
+const Todo = ({ projectId }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -24,7 +25,20 @@ const Todo = ({projectId}) => {
     const [description, setDescription] = useState('');
     const [loading, setLoading] = useState(false);
     const [, setError] = useState(null);
-    
+    let completedTaskIds = [];
+    let pendingTaskIds = [];
+    if (Object.keys(tasksObject).length && tasksIds?.length) {
+        completedTaskIds = tasksIds.filter((taskId) => {
+            if(tasksObject[taskId]?.completed) {
+                return true;
+            } else {
+                pendingTaskIds.push(taskId);
+                return false;
+            }
+        });
+        console.log('Completed Task Ids ', completedTaskIds, 'pendingTaskIds ', pendingTaskIds);
+    }
+
     function addTaskHandler() {
         setLoading(true);
         dispatch(addTask({
@@ -33,7 +47,7 @@ const Todo = ({projectId}) => {
             taskDescription: description
         })).then((res) => {
             console.log('res ', res);
-            if(res.error && res.payload === 'Authentication Failed') {
+            if (res.error && res.payload === 'Authentication Failed') {
                 return navigate(`/login?onSuccess=${window.location.pathname}`);
             }
             setLoading(false);
@@ -42,12 +56,12 @@ const Todo = ({projectId}) => {
             console.log('err ', err);
             setError(err.message);
         })
-        .then((res) => {
-            console.log('res1 ', res);
-            setLoading(false);
-            setTitle('');
-            setDescription('');
-        })
+            .then((res) => {
+                console.log('res1 ', res);
+                setLoading(false);
+                setTitle('');
+                setDescription('');
+            })
         // setLoading(true);
         // // request server to add task
         // api.addTask({
@@ -68,31 +82,58 @@ const Todo = ({projectId}) => {
         //     setTitle('');
         //     setDescription('');
         // });
-    } 
+    }
 
     return (
-        <div style={{width: '100%', background: '#fff', padding: '1rem',flex: '1', margin: '0 auto'}}>
+        <div style={{ width: '100%', background: '#fff', padding: '1rem', flex: '1', margin: '0 auto' }}>
             <div>
                 <div>
-                    <span style={{fontSize: '1rem', fontWeight: 'bold'}}> Today </span> <span style={{fontSize: '0.8rem', color: '#727272'}}> {new Date().toDateString()} </span>
+                    <span style={{ fontSize: '1rem', fontWeight: 'bold' }}> Today </span> <span style={{ fontSize: '0.8rem', color: '#727272' }}> {new Date().toDateString()} </span>
                 </div>
                 <div>
-                    <span style={{fontSize: '0.8rem'}}> Welcome {user.name} 🤗, plan your project. </span>
+                    <span style={{ fontSize: '0.8rem' }}> Welcome {user.name} 🤗, plan your project. </span>
                 </div>
             </div>
-            <div>
-                {Object.keys(tasksObject).length ? tasksIds.map((taskId, idx) => {
-                    return (
-                        <div style={{padding: '5px', background: 'rgb(246, 248, 249)', margin: '5px 0', cursor: 'pointer'}}>
-                            {tasksObject[taskId]['taskHeading']}
-                        </div>
-                    )
-                }): (<>Loading</>)}
+            <div style={{padding: '5px', border: '1px solid #ccc', marginTop: '10px'}}>
+                <h6>Pending Tasks ({pendingTaskIds.length})</h6>
+                {(Object.keys(tasksObject).length && tasksIds?.length) ? tasksIds.map((taskId, idx) => {
+                    const task = tasksObject[taskId];
+                    if (!task) {
+                        return;
+                    } else if(!task['completed']){
+                        return (
+                            <div key={taskId} >
+                                <TaskModal task={tasksObject[taskId]} />
+                            </div>
+                        )
+                    }
+
+                }) : (<div style={{fontSize: '14px'}}> Hurrah no work left </div>)}
             </div>
-            { visibilityAddTaskForm === 'closed' && (
-                <div style={{margin: '0.5rem 0', padding: '0.5rem', border: '1.5px solid #ccc'}}>
+            <div style={{padding: '5px', border: '1px solid #ccc', marginTop: '10px'}}>
+                <h6>Completed Task ({completedTaskIds.length})</h6>
+                {(completedTaskIds.length) ? completedTaskIds.map((taskId, idx) => {
+                    const task = tasksObject[taskId];
+                    if (!task) {
+                        return;
+                    } else if (task['completed']) {
+                        return (
+                            <div key={taskId} >
+                                <TaskModal task={tasksObject[taskId]} />
+                            </div>
+                        )
+                    }
+
+                }) : (
+                    <div style={{fontSize: '14px'}}>
+                        Do some work
+                    </div>
+                )}
+            </div>
+            {visibilityAddTaskForm === 'closed' && (
+                <div style={{ margin: '0.5rem 0', padding: '0.5rem', border: '1.5px solid #ccc' }}>
                     <div className={styles.addTask} onClick={() => setVisibilityAddTaskForm('open')}>
-                        <AddIcon className={styles.addIcon}/>
+                        <AddIcon className={styles.addIcon} />
                         <span className={styles.text}>
                             Add Task
                         </span>
@@ -100,37 +141,37 @@ const Todo = ({projectId}) => {
                 </div>
             )}
 
-            { (visibilityAddTaskForm === 'closed' && tasksIds.length === 0) && (
-                <div style={{textAlign: 'center'}}>
+            {(visibilityAddTaskForm === 'closed' && tasksIds.length === 0) && (
+                <div style={{ textAlign: 'center' }}>
                     <BackgroundImg />
-                    <div style={{fontSize: '0.8rem'}}>Get a clear view of the day ahead.</div>
-                    <button className={styles.btn + ' ' + styles.addTaskBtn} style={{marginTop: '1rem'}} onClick={() => setVisibilityAddTaskForm('open')}> Add a task </button>
+                    <div style={{ fontSize: '0.8rem' }}>Get a clear view of the day ahead.</div>
+                    <button className={styles.btn + ' ' + styles.addTaskBtn} style={{ marginTop: '1rem' }} onClick={() => setVisibilityAddTaskForm('open')}> Add a task </button>
                 </div>
             )}
-            
+
             {visibilityAddTaskForm === 'open' && (
-                <div style={{border: '1px solid #ddd', padding: '10px', marginTop: '1rem'}}>
+                <div style={{ border: '1px solid #ddd', padding: '10px', marginTop: '1rem' }}>
                     <form>
                         <div>
-                            <input type="text" placeholder="Task Heading" style={{border: 'none',outline: 'none'}} value={title} onChange={(e)=>setTitle(e.target.value)} disabled={loading}/>
-                            <textarea onChange={(e) =>{ e.target.style.height = 'auto';e.target.style.height = e.target.scrollHeight + 'px'; setDescription(e.target.value)}} value={description} placeholder="Task description" style={{border: 'none', outline: 'none', width: '100%', marginTop: '10px', fontWeight: '300', fontSize: '0.8rem'}} disabled={loading}></textarea>
+                            <input type="text" placeholder="Task Heading" style={{ border: 'none', outline: 'none' }} value={title} onChange={(e) => setTitle(e.target.value)} disabled={loading} />
+                            <textarea onChange={(e) => { e.target.style.height = 'auto'; e.target.style.height = e.target.scrollHeight + 'px'; setDescription(e.target.value) }} value={description} placeholder="Task description" style={{ border: 'none', outline: 'none', width: '100%', marginTop: '10px', fontWeight: '300', fontSize: '0.8rem' }} disabled={loading}></textarea>
                         </div>
-                        <div style={{marginTop: '10px'}}>
-                            <button className={styles.btn+ ' ' + styles.addTaskBtn} disabled={!title || loading} onClick={addTaskHandler}>
+                        <div style={{ marginTop: '10px' }}>
+                            <button className={styles.btn + ' ' + styles.addTaskBtn} disabled={!title || loading} onClick={addTaskHandler}>
                                 Add Task
                             </button>
-                            <button className={styles.btn + ' ' + styles.cancelBtn} style={{marginLeft: '5px'}} onClick={()=> setVisibilityAddTaskForm('closed')} disabled={loading}>
+                            <button className={styles.btn + ' ' + styles.cancelBtn} style={{ marginLeft: '5px' }} onClick={() => setVisibilityAddTaskForm('closed')} disabled={loading}>
                                 Cancel
                             </button>
                         </div>
                     </form>
                     {loading && (
                         <>
-                            <div style={{width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', background: '#ccc', opacity: '0.5'}}>
+                            <div style={{ width: '100%', height: '100%', position: 'absolute', top: '0', left: '0', background: '#ccc', opacity: '0.5' }}>
 
                             </div>
-                            <div style={{width: '100%', height: '100%', position: 'absolute', top: '0%', left: '0%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                <CircularProgress style={{color: '#333'}} />
+                            <div style={{ width: '100%', height: '100%', position: 'absolute', top: '0%', left: '0%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <CircularProgress style={{ color: '#333' }} />
                             </div>
                         </>
                     )}
