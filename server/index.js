@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const router = require('./routes');
+const client = require('./database');
 dotenv.config();
 
 const app = express();
@@ -13,7 +14,13 @@ app.use(bodyParser.json()); app.use('/', (req, res, next) => {
 })
 app.use(router);
 
-
-app.listen(4000,()=>{
-    console.log("live");
+/** connect to db and turn on nodejs server */
+client.connect().then(() => {
+    console.log("Connected to DB");
+    /** start nodejs server */
+    app.listen(4000, () => {
+        console.log("live");
+    })
+}).catch((err) => {
+    console.log("DB connection fails");
 })
