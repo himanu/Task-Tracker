@@ -1,18 +1,35 @@
 
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const uri = "mongodb+srv://himanshu:qcubT8ivsd4DHsn4@cluster0.zmg0v.mongodb.net/Todoist?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+const { Sequelize } = require('sequelize');
+const fs = require("fs");
 
-client.connect().then(() => console.log("Connected"));
+const {
+  DATABASE_HOST,
+  DATABASE_USERNAME,
+  DATABASE_PASSWORD,
+  DATABASE_NAME,
+  DIALECT,
+  DATABASE_PORT,
+} = process.env;
 
-// const db = {  
-//   async getProjectById(projectId) {
-//     const document = await client.db().collection('projects').findOne({
-//       _id: projectId
-//     });
-//     return document;
-//   }
-// }
-// module.exports = { db };
+/** connect to db */
+const connectionString = `postgres://${DATABASE_USERNAME}${DATABASE_PASSWORD ? `:${DATABASE_PASSWORD}` : ""}@${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}`;
+const sequelize = new Sequelize(connectionString, {
+  dialect: DIALECT,
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
+});
 
-module.exports = client;
+/** define models */
+const items = fs.readdirSync(`${__dirname}/models`, { withFileTypes: true });
+items.forEach((item) => {
+  /** initialize model file */
+  item.isFile() &&
+    item.name.includes("model.js") &&
+    require(`${__dirname}/models/${item.name}`)(sequelize);
+});
+
+module.exports = sequelize;
