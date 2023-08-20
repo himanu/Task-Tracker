@@ -11,11 +11,13 @@ const signInUser = async ({ email, name, picture }) => {
             name,
             picture
         });
+        console.log("Created a user");
     } else {
         /** else update user */
         user.name = name;
         user.picture = picture;
         await user.save();
+        console.log("Updated user");
     }
     console.log('User ', user);
 };
