@@ -45,7 +45,7 @@ const deleteTaskController = async (req, res) => {
         await deleteTask(taskId);
         res.status(201).send("Deleted")
     } catch (err) {
-        console.log("Err ", err);
+        console.log("Error ", err);
         res.status(500).send({
             error: err.message
         })
