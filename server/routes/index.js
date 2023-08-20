@@ -22,7 +22,7 @@ router.get('/tasks/:projectId', verifyJwtToken, getTasksController);
 router.post('/tasks', verifyJwtToken, addTaskController);
 
 /** update task route */
-router.post('/task/updateTask', verifyJwtToken, updateTaskController);
+router.put('/task/updateTask', verifyJwtToken, updateTaskController);
 
 /** delete task route */
 router.delete('/task/deleteTask', verifyJwtToken, deleteTaskController)

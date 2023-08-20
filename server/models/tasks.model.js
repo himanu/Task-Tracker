@@ -23,6 +23,10 @@ const TaskModel = (sequelize) =>
                 key: "id"
             },
             allowNull: false
+        },
+        completed: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     });
 

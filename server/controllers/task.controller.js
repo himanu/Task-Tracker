@@ -20,19 +20,20 @@ const addTaskController = async (req, res) => {
         })
     } catch (err) {
         console.log("Error ", err);
-        res.status(500).send("Error");
+        res.status(err.status || 500).send(err.message || "Error");
     }
 }
 
 const updateTaskController = async (req, res) => {
     try {
-        const task = await (await updateTask(req.body)).value;
+        const task = await updateTask(req.body);
         console.log('updated task ', task);
         res.status(201).send({
             task
         })
     } catch (err) {
-        res.status(500).send({
+        console.log("Erorr ", err.status);
+        res.status(err.status || 500).send({
             error: err.message
         })
     }
@@ -40,9 +41,8 @@ const updateTaskController = async (req, res) => {
 
 const deleteTaskController = async (req, res) => {
     try {
-        const taskId = req.query.taskId, projectId = req.query.projectId;
-        console.log('taskId ', taskId, ' projectId ', projectId);
-        await deleteTask({ taskId, projectId });
+        const taskId = req.query.taskId;
+        await deleteTask(taskId);
         res.status(201).send("Deleted")
     } catch (err) {
         console.log("Err ", err);

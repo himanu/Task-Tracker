@@ -1,63 +1,64 @@
-const client = require("../database");
+const sequelize = require("../database");
 
+const TaskModel = sequelize.models.Tasks;
 /** get tasks of an project */
 const getTasks = async (projectId) => {
-    const projectsCursor = await client.db().collection('tasks').find({
-        parentProject: projectId
+    const tasks = await TaskModel.findAll({
+        where: {
+            project_id: projectId
+        }
     })
-    const tasksObject = {};
-    await projectsCursor.forEach((task) => {
-        tasksObject[task._id] = task;
-    })
-    return tasksObject;
+    // const tasksObject = {};
+    // await projectsCursor.forEach((task) => {
+    //     tasksObject[task._id] = task;
+    // })
+    return tasks;
 };
 
 /** add a task to a project */
-const addTask = async ({ projectId, taskHeading, taskDescription }) => {
-    /** insert a task */
-    const task = await client.db().collection('tasks').insertOne({
-        taskHeading,
-        taskDescription,
-        parentProject: projectId,
-        completed: false
-    })
-    /** add task to project */
-    await client.db().collection('projects').findOneAndUpdate(
-        {
-            _id: new ObjectId(projectId),
-        }, {
-        $push: {
-            tasks: task.insertedId
+const addTask = async ({ projectId, taskHeading, taskDescription="" }) => {
+    /** check whether a task exist with same heading */
+    const taskExist = await TaskModel.findOne({
+        where: {
+            project_id: projectId,
+            title: taskHeading
         }
-    }, {
-        returnDocument: 'after'
+    })
+    if (taskExist) {
+        throw {
+            status: 405,
+            message: "Task with same heading already exist"
+        };
     }
-    )
-    return {
-        _id: task.insertedId,
-        taskHeading,
-        taskDescription,
-        parentProject: projectId,
-        completed: false
-    }
+
+    /** insert a task */
+    return await TaskModel.create({
+        title: taskHeading,
+        description: taskDescription,
+        completed: false,
+        project_id: projectId
+    });
 }
 
 /** update a task */
-const updateTask = async (task) => {
+const updateTask = async (body) => {
     try {
-        const updatedTask = await client.db().collection('tasks').findOneAndUpdate({
-            _id: new ObjectId(task._id)
-        }, {
-            $set: {
-                taskHeading: task['taskHeading'],
-                taskDescription: task['taskDescription'],
-                completed: task['completed']
+        const task = await TaskModel.findOne({
+            where: {
+                id: body.id
             }
-        }, {
-            returnDocument: 'after'
-        }
-        );
-        return updatedTask;
+        });
+        if (!task)
+            throw {
+                status: 404,
+                message: "No task with provided id"
+            }
+        task.title = body.taskHeading;
+        task.description = body.taskDescription;
+        task.completed = body.completed;
+        await task.save();
+        console.log("Successfully updated task");
+        return task;
     } catch (err) {
         console.log("Some error occured ", err);
         throw err;
@@ -65,18 +66,12 @@ const updateTask = async (task) => {
 }
 
 /** delete a task */
-const deleteTask = async ({ taskId, projectId }) => {
-    await client.db().collection('projects').updateOne({
-        _id: new ObjectId(projectId)
-    }, {
-        $pull: {
-            'tasks': new ObjectId(taskId)
+const deleteTask = async (taskId) => {
+    await TaskModel.destroy({
+        where: {
+            id: taskId
         }
-    }
-    )
-    await client.db().collection('tasks').deleteOne({
-        _id: new ObjectId(taskId)
-    })
+    });
 }
 
 module.exports = {

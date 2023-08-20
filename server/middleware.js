@@ -41,6 +41,11 @@ const verifyJwtToken = async (req, res, next) => {
                 id: user_id
             }
         });
+        if (!user)
+            return res.status(401).send({
+                error: "Invalid token"
+            })
+
         /** add user info in req object */
         req.user = user;
         /** forward the request to next middleware/controller */
