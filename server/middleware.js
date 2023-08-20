@@ -37,7 +37,9 @@ const verifyJwtToken = async (req, res, next) => {
         const { user_id } = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
         /** get user */
         const user = await sequelize.models.Users.findOne({
-            id: user_id
+            where: {
+                id: user_id
+            }
         });
         /** add user info in req object */
         req.user = user;

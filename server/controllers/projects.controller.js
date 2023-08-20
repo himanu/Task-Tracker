@@ -2,9 +2,8 @@ const { getProjects, addProject } = require("../services/projects.service");
 
 const getProjectsController = async (req, res) => {
     try{
-        const { email } = req.auth;
-        const projectsObject = await getProjects(email);
-        console.log('All projects ', projectsObject);
+        const { id } = req.user;
+        const projectsObject = await getProjects(id);
         res.send(projectsObject);
     } catch(err) {
         console.log("Error occured getProjectController", err);
@@ -12,10 +11,13 @@ const getProjectsController = async (req, res) => {
     }
 };
 const addProjectsController = async (req, res) => {
-    const { email } = req.auth;
-    const project_name = req.body.project_name;
-    const project = await addProject(email, project_name);
-    res.send(project);
+    const { id } = req.user;
+    const project_name = req?.body?.project_name ?? "";
+    const project = await addProject(id, project_name);
+    res.send({
+        status: "Successfully created project",
+        project
+    });
 };
 
 
