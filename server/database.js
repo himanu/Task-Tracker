@@ -32,4 +32,5 @@ items.forEach((item) => {
     require(`${__dirname}/models/${item.name}`)(sequelize);
 });
 
+// sequelize.sync();
 module.exports = sequelize;

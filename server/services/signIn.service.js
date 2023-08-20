@@ -1,14 +1,21 @@
-const client = require("../database");
+const sequelize = require("../database");
 
 const signInUser = async ({ email, name, picture }) => {
-    let user = await client.db().collection('Users').findOne({ email });
-    /** if it is new user insert in the DB */
+    const UserModel = sequelize.models.Users;
+    let user = await UserModel.findOne({ email });
+    
     if (!user) {
-        user = await client.db().collection('Users').insertOne({
+        /** if it is new user insert in the DB */
+        user = await UserModel.create({
             email,
             name,
             picture
         });
+    } else {
+        /** else update user */
+        user.name = name;
+        user.picture = picture;
+        await user.save();
     }
     console.log('User ', user);
 };
