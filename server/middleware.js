@@ -1,8 +1,8 @@
 const {OAuth2Client} = require('google-auth-library');
 const client = new OAuth2Client(process.env.CLIENT_ID);
 
-function verifyToken(req, res, next) {
-  const tokenId = req.headers.authorization.split(' ')[1];
+function verifyIdToken(req, res, next) {
+  const tokenId = req?.body?.accessToken || "";
   if (!tokenId) 
     res.status(401).send({
         error: "Please send token id"
@@ -21,4 +21,6 @@ function verifyToken(req, res, next) {
       });
   })
 }
-module.exports = {verifyToken};
+
+const verifyJwtToken = () => {};
+module.exports = {verifyIdToken, verifyJwtToken};

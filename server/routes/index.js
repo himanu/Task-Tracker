@@ -2,30 +2,29 @@ const express = require("express");
 const { getProjectsController, addProjectsController } = require("../controllers/projects.controller");
 const signInController = require("../controllers/sign-in.controller");
 const { getTasksController, addTaskController, updateTaskController, deleteTaskController } = require("../controllers/task.controller");
-const { db } = require("../database");
-const { verifyToken } = require("../middleware");
+const { verifyIdToken, verifyJwtToken } = require("../middleware");
 
 const router = express.Router();
 
 /** sign in */
-router.get('/signIn', verifyToken, signInController);
+router.get('/signIn', verifyIdToken, signInController);
 
 /** get list of projects */
-router.get('/projects', verifyToken, getProjectsController);
+router.get('/projects', verifyJwtToken, getProjectsController);
 
 /** add a project */
-router.post('/projects', verifyToken, addProjectsController);
+router.post('/projects', verifyJwtToken, addProjectsController);
 
 /** get tasks of a project */
-router.get('/tasks/:projectId', verifyToken, getTasksController);
+router.get('/tasks/:projectId', verifyJwtToken, getTasksController);
 
 /** add task */
-router.post('/tasks', verifyToken, addTaskController);
+router.post('/tasks', verifyJwtToken, addTaskController);
 
 /** update task route */
-router.post('/task/updateTask', verifyToken, updateTaskController);
+router.post('/task/updateTask', verifyJwtToken, updateTaskController);
 
 /** delete task route */
-router.delete('/task/deleteTask', verifyToken, deleteTaskController)
+router.delete('/task/deleteTask', verifyJwtToken, deleteTaskController)
 
 module.exports = router;
