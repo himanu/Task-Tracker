@@ -1,9 +1,9 @@
-const client = require("../database");
-
+const sequelize = require("../database");
+const ProjectModel = sequelize.models.Projects;
 /** get list of user projects */
 const getProjects = async (email) => {
-    const projectsCursor = await client.db().collection('projects').find({
-        userEmail: email
+    const projectsCursor = await ProjectModel.findOne({
+        user_id: email
     })
     const projectsObject = {};
     await projectsCursor.forEach((project) => {

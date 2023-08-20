@@ -1,4 +1,5 @@
 const sequelize = require("../database");
+const jwt = require("jsonwebtoken");
 
 const signInUser = async ({ email, name, picture }) => {
     const UserModel = sequelize.models.Users;
@@ -19,7 +20,19 @@ const signInUser = async ({ email, name, picture }) => {
         await user.save();
         console.log("Updated user");
     }
-    console.log('User ', user);
+    return user;
 };
 
-module.exports = signInUser;
+const createToken = (userId) => jwt.sign(
+    {
+        user_id: userId,
+    },
+    process.env.TOKEN_SECRET_KEY,
+    {
+        expiresIn: "24h",
+    }
+)
+module.exports = {
+    signInUser,
+    createToken
+};

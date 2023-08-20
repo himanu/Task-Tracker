@@ -1,11 +1,14 @@
-const signInUser = require("../services/signIn.service");
+const { signInUser, createToken } = require("../services/signIn.service");
 
 const signInController = async (req, res) => {
     try {
         const payload = req.auth;
-        await signInUser(payload);
-        const { email, name, picture } = payload;
+        const user = await signInUser(payload);
+        const { email, name, picture, id } = user;
+        const token = createToken(id);
         res.status(200).send({
+            success: true,
+            token,
             user: { email, name, picture }
         });
     } catch (err) {
