@@ -5,7 +5,7 @@ import {useParams} from 'react-router-dom';
 
 export default function Project() {
   let params = useParams();
-  const projectId = params.projectId;;
+  const projectId = params.projectId;
   const {projectsObject} = useSelector((state) => state.projects);
   const project = projectsObject[projectId];
 

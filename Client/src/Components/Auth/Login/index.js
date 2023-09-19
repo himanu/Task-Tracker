@@ -1,18 +1,16 @@
 import {GoogleLogin} from 'react-google-login';
-import { useDispatch, useSelector } from 'react-redux';
-import {signIn} from '../../../Store/Slices/Auth';
 import WelcomeImg from '../../../images/Welcome.jpg';
 import { useState } from 'react';
-import { red } from '@mui/material/colors';
 import { useNavigate } from 'react-router-dom';
+import api from '../../../api';
 
 const Login = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const [error, setError] = useState('');
+
     const handleSuccess = async(authObj) => {
         const {tokenId} = authObj;
-        return dispatch(signIn(tokenId)).then((res)=>{
+        return (api.signIn(tokenId)).then((res)=>{
             if(res.error) {
                 console.log('res ', res);
                 throw new Error(res.payload)
@@ -38,7 +36,7 @@ const Login = () => {
                     onFailure={(obj)=> console.log("Failure ", obj)}
                 />
             </div>
-            <div style={{color: red[400]}}>
+            <div style={{color: "red"}}>
                 {error}
             </div>
         </div>

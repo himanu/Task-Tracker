@@ -1,11 +1,12 @@
-import { useSelector } from "react-redux"
+import { useContext } from "react"
+import { UserContext } from "../../contexts/user.context"
 
 export default function Welcome() {
-  const name = useSelector((state) => state.auth.user.name);
+  const { user } = useContext(UserContext);
   return (
     <>
       <div style={{margin: '1em'}}>
-        Welcome {name}, please select one of the project
+        Welcome {user.name}, please select one of the project
       </div>
     </>
   )

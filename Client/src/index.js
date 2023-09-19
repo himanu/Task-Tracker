@@ -2,19 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Provider } from 'react-redux';
-import store from './Store';
 import {
   BrowserRouter
 } from "react-router-dom";
+import UserContextProvider from './contexts/user.context';
 
 ReactDOM.render(
   <React.StrictMode>
-      <Provider store={store}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </Provider>
+    <UserContextProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </UserContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

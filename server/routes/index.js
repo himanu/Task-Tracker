@@ -9,6 +9,18 @@ const router = express.Router();
 /** sign in */
 router.get('/signIn', verifyIdToken, signInController);
 
+/** load user */
+router.get('/load-user', verifyJwtToken, (req, res) => {
+    const user = req.user;
+    return {
+        user: {
+            email: user?.email ?? "",
+            name: user?.name ?? "",
+            picture: user?.name ?? ""
+        }
+    }
+})
+
 /** get list of projects */
 router.get('/projects', verifyJwtToken, getProjectsController);
 

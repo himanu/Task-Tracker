@@ -1,50 +1,42 @@
-import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate, Outlet } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { getAuthState } from '../../Store/Selectors/Auth';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../Store/Slices/Auth';
+import { useContext, useState } from 'react';
+import { UserContext } from '../../contexts/user.context';
+import DesktopNav from './desktop-navigation';
+import MobileNavigation from './mobile-nav';
 
-const pages = [{title: 'Dashboard', route: 'Dashboard/app'}, {title: 'About', route: 'About'}];
+const pages = [{title: 'Dashboard', route: 'dashboard'}, {title: 'About', route: 'About'}];
 const settings = ['Profile', 'Logout'];
 
 const ResponsiveAppBar = () => {
   const navigate = useNavigate();
-  const {isAuthed, user, status} = useSelector(getAuthState);
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const dispatch = useDispatch();
+  const { logoutUser, user } = useContext(UserContext);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
+  /** opens user menu */
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
+  /** closes user menu */
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
   const currentPath=window.location.pathname;
+
+  /** handles logout */
   function handleLogout() {
-    window.localStorage.removeItem('tokenId');
-    dispatch(logout());
+    logoutUser();
     navigate('/');
   }
   return (
@@ -52,74 +44,12 @@ const ResponsiveAppBar = () => {
       <AppBar position="relative" sx={{background: '#3d3d3d', color: '#fff'}}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <Typography
-              variant="h5"
-              noWrap
-              component="div"
-              sx={{ mr: 2, display: { xs: 'none', md: 'flex' }, cursor: 'pointer' }}
-              onClick={()=> navigate('/')}
-            >
-              Todoist
-            </Typography>
-
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{
-                  display: { xs: 'block', md: 'none' },
-                }}
-              >
-                {pages.map((page) => (
-                  <MenuItem key={page.title} onClick={() => {navigate(`/${page.route}`);handleCloseNavMenu();}}>
-                    <Typography textAlign="center" sx={{color: '#727272'}}>{page.title}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
-            >
-              LOGO
-            </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {pages.map((page) => (
-                <Button
-                  key={page.title}
-                  onClick={() => {navigate(`/${page.route}`);handleCloseNavMenu();}}
-                  sx={{ my: 2, color: '#fff', display: 'block', fontSize: '0.75rem' }}
-                >
-                  {page.title}
-                </Button>
-              ))}
-            </Box>
-
+            {/** visible in all screen except extra small screen */}
+            <DesktopNav pages={pages} />
+            {/** visible in extra small screen */}
+            <MobileNavigation pages={pages} />
             <Box sx={{ flexGrow: 0 }}>
-              {isAuthed === true? (
+              {user ? (
                   <>
                       <Tooltip title="Open settings">
                       <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -165,4 +95,5 @@ const ResponsiveAppBar = () => {
     </>
   );
 };
+
 export default ResponsiveAppBar;

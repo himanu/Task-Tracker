@@ -9,6 +9,13 @@ const api = {
             }
         })
     },
+    loadUser(jwtToken) {
+        return axiosInstance.get(routes.loadUser, {
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
+            }
+        })
+    },
     addTask(task) {
         // this will return a promise
         const tokenId = JSON.parse(localStorage.getItem('tokenId'));

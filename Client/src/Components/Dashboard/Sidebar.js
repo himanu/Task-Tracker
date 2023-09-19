@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItemText from "@mui/material/ListItemText";
@@ -11,25 +11,17 @@ import StarBorder from "@mui/icons-material/StarBorder";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import AddIcon from '@mui/icons-material/Add';
 import { CircularProgress } from '@mui/material'
-import { useSelector, useDispatch } from "react-redux";
-import {logout} from '../../Store/Slices/Auth';
 import {useNavigate} from 'react-router-dom';
-import { getProjects, addProject } from "../../Store/Slices/Projects";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import api from "../../api";
+import useFetch from "../../hooks/useFetch";
 
 function NestedList({setCreateProjectModal}) {
   const navigate = useNavigate();
-  const [open, setOpen] = React.useState(true);
-  const {isFetching, error, projectsObject}= useSelector((state) => state.projects);
-  const dispatch = useDispatch();
-  const handleClick = () => {
-    setOpen(!open);
-  };
-  
-  if(error === 'Authentication Failed') {
-    dispatch(logout());
-  } 
+  const [open, setOpen] = useState(true);
+  const { data: projectsObject, isFetching, error} = useFetch(api.getProjects);
+
 
   return (
     <List
@@ -38,8 +30,8 @@ function NestedList({setCreateProjectModal}) {
       aria-labelledby="nested-list-subheader"
     >
       <div style={{display: 'flex', alignItems: 'center'}}>
-        <ListItemButton onClick={handleClick}>
-          {open ? <ArrowRightIcon style={{fontSize: '1.5rem', transform: `rotate(90deg)`}} /> : <ArrowRightIcon style={{fontSize: '1.5rem'}} />}
+        <ListItemButton onClick={() => setOpen(!open)}>
+          <ArrowRightIcon style={{fontSize: '1.5rem', ...(open && {transform: `rotate(90deg)`})}} />
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
@@ -50,7 +42,7 @@ function NestedList({setCreateProjectModal}) {
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
             { !isFetching? 
-              (Object.keys(projectsObject).length? (Object.keys(projectsObject).map((projectId, index) => {
+              (Object.keys(projectsObject).length ? (Object.keys(projectsObject).map((projectId, index) => {
                 return (
                   <ListItemButton sx={{ pl: 4 }} key={index} onClick={() => navigate(`project/${projectsObject[projectId]['_id']}`)}>
                     <ListItemIcon>
@@ -77,17 +69,12 @@ function NestedList({setCreateProjectModal}) {
 }
 
 export default function ProjectDrawer() {
-  const dispatch = useDispatch();
   const [project_name, setProject_Name] = useState('');
-  const {user} = useSelector((state) => state.auth);
   const [createProjectModal, setCreateProjectModal] = useState(false);
 
-  useEffect(() => {
-    dispatch(getProjects());
-  }, []);
 
   const handleAddProject = async() => {
-    await dispatch(addProject(project_name));
+    await api.addProject(project_name);
     setCreateProjectModal(false);
   }
 
@@ -105,7 +92,7 @@ export default function ProjectDrawer() {
             }
           }}
         >
-          {<NestedList setCreateProjectModal={setCreateProjectModal}/>}
+          <NestedList setCreateProjectModal={setCreateProjectModal} />
         </Drawer>
       </React.Fragment>
       <Modal

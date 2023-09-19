@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { addTask, getTasks } from "../../Store/Slices/Tasks";
 import { useNavigate } from 'react-router-dom';
 import TaskModal from "./TaskModal";
+
 const Todo = ({ projectId }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();

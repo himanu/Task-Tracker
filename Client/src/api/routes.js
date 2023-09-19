@@ -1,6 +1,7 @@
 const routes = {
     signIn: 'signIn',
     tasks: 'tasks',
-    projects: 'projects'
+    projects: 'projects',
+    loadUser: 'load-user'
 }
 export default routes;
