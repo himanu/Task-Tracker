@@ -9,7 +9,7 @@ const useFetch = (apiMethod) => {
         try {
             setIsFetching(true);
             const result = await apiMethod();
-            setData(result);
+            setData(result?.data);
         } catch (err) {
             setError(err.message);
         }

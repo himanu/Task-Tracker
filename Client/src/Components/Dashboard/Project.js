@@ -10,11 +10,7 @@ export default function Project() {
   const project = projectsObject[projectId];
 
   if(!project) {
-    return (
-      <>
-        <CircularProgress />
-      </>
-    )
+    return <CircularProgress />
   }
   return (
     <div style={{flex: 1, padding: '1rem', display: 'flex', flexDirection: 'column'}}>

@@ -15,13 +15,11 @@ import {useNavigate} from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import api from "../../api";
-import useFetch from "../../hooks/useFetch";
 
-function NestedList({setCreateProjectModal}) {
+function NestedList({ setCreateProjectModal, projectsObject, isFetching, error}) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
-  const { data: projectsObject, isFetching, error} = useFetch(api.getProjects);
-
+  console.log("project ", projectsObject);
 
   return (
     <List
@@ -42,21 +40,21 @@ function NestedList({setCreateProjectModal}) {
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
             { !isFetching? 
-              (Object.keys(projectsObject).length ? (Object.keys(projectsObject).map((projectId, index) => {
+              projectsObject.length ? projectsObject.map(({id, title}, index) => {
                 return (
-                  <ListItemButton sx={{ pl: 4 }} key={index} onClick={() => navigate(`project/${projectsObject[projectId]['_id']}`)}>
+                  <ListItemButton sx={{ pl: 4 }} key={index} onClick={() => navigate(`project/${id}`)}>
                     <ListItemIcon>
                       <StarBorder />
                     </ListItemIcon>
-                    <ListItemText primary={projectsObject[projectId]['project_name']} />
+                    <ListItemText primary={title} />
                   </ListItemButton>
                 )
                 })
-              ): (
+              : (
                 <div>-
                   No projects
                 </div>
-              )): (
+              ): (
                 <div style={{textAlign: 'center'}}>
                   {error? (<span style={{color: 'red'}}> {error} </span>): <CircularProgress />}
                 </div>  
@@ -68,7 +66,7 @@ function NestedList({setCreateProjectModal}) {
   );
 }
 
-export default function ProjectDrawer() {
+export default function ProjectDrawer({...props}) {
   const [project_name, setProject_Name] = useState('');
   const [createProjectModal, setCreateProjectModal] = useState(false);
 
@@ -92,7 +90,7 @@ export default function ProjectDrawer() {
             }
           }}
         >
-          <NestedList setCreateProjectModal={setCreateProjectModal} />
+          <NestedList setCreateProjectModal={setCreateProjectModal} {...props} />
         </Drawer>
       </React.Fragment>
       <Modal

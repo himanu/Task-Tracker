@@ -15,7 +15,7 @@ const Welcome = () => {
                     Track and manage everything from day one to the completion with <strong>Todoist</strong>.
                 </div>
             </div>
-            <div className={styles.button} onClick={() => navigate('/dashboard/app')}>
+            <div className={styles.button} onClick={() => navigate('/dashboard')}>
                 Get Started
             </div>
         </div>

@@ -34,6 +34,7 @@ const UserContextProvider = ({ children }) => {
                 localStorage.setItem(jwtTokenString, data?.token)
         } catch (err) {
             console.error("Error while signing in user ", err);
+            throw err.message
         }
     }
 

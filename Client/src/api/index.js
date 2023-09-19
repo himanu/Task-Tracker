@@ -1,6 +1,7 @@
 import axiosInstance from './axiosInstance';
 import routes from './routes';
 
+const tokenId = localStorage.getItem('jwtToken');
 const api = {
     signIn(tokenId) {
         return axiosInstance.get(routes.signIn,{
@@ -17,8 +18,6 @@ const api = {
         })
     },
     addTask(task) {
-        // this will return a promise
-        const tokenId = JSON.parse(localStorage.getItem('tokenId'));
         if(!tokenId) {
             return Promise.reject('Authentication Failed');
         }
@@ -30,7 +29,6 @@ const api = {
         })
     },
     updateTask(task) {
-        const tokenId = JSON.parse(localStorage.getItem('tokenId'));
         if(!tokenId) {
             return Promise.reject('Authentication Failed');
         }
@@ -41,7 +39,6 @@ const api = {
         })
     },
     deleteTask(taskId, projectId) {
-        const tokenId = JSON.parse(localStorage.getItem('tokenId'));
         if(!tokenId) {
             return Promise.reject('Authentication Failed');
         }
@@ -52,7 +49,6 @@ const api = {
         })
     },
     getProjects() {
-        const tokenId = JSON.parse(localStorage.getItem('tokenId'));
         if(!tokenId) {
             throw new Error('Authentication Failed');
         }
@@ -63,7 +59,6 @@ const api = {
         });
     },
     addProject(project_name) {
-        const tokenId = JSON.parse(localStorage.getItem('tokenId'));
         if(!tokenId) {
             throw new Error('Authentication Failed');
         }
@@ -77,7 +72,6 @@ const api = {
         );
     }, 
     getTasks(projectId) {
-        const tokenId = JSON.parse(localStorage.getItem('tokenId'));
         if(!tokenId) {
             throw new Error('Authentication Failed');
         }

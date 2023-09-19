@@ -20,6 +20,8 @@ const ProjectModel = (sequelize) =>
             },
             allowNull: false
         }
+    }, {
+        tableName: "projects"
     });
 
 module.exports = ProjectModel;
