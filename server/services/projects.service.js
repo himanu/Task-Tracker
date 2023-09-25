@@ -17,10 +17,6 @@ const addProject = async (userId, project_name) => {
         title: project_name,
         user_id: userId
     });
-    console.log('Project ', project);
-    return {
-        project_id: project.id,
-        project_name
-    };
+    return project;
 }
 module.exports = { getProjects, addProject };

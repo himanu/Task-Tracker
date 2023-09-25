@@ -65,13 +65,13 @@ function NestedList({ setCreateProjectModal, projectsObject, isFetching, error }
   );
 }
 
-export default function ProjectDrawer({ ...props }) {
+export default function ProjectDrawer({ addProject, ...props }) {
   const [project_name, setProject_Name] = useState('');
   const [createProjectModal, setCreateProjectModal] = useState(false);
 
 
   const handleAddProject = async () => {
-    await api.addProject(project_name);
+    await addProject(project_name);
     setCreateProjectModal(false);
   }
 

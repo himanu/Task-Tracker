@@ -59,7 +59,7 @@ const MobileNavigation = ({ pages }) => {
                 component="div"
                 sx={{ flexGrow: 1 }}
             >
-                LOGO
+                Todoist
             </Typography>
         </Container>
     )
