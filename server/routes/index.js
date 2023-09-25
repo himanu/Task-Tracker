@@ -16,7 +16,7 @@ router.get('/load-user', verifyJwtToken, (req, res) => {
         user: {
             email: user?.email ?? "",
             name: user?.name ?? "",
-            picture: user?.name ?? ""
+            picture: user?.picture ?? ""
         }
     });
 })
