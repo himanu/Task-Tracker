@@ -7,7 +7,7 @@ export default function Home() {
   const { data: projectsObject, isFetching, error } = useFetch(api.getProjects);
 
   return (
-    <div>
+    <div style={{display: "flex"}}>
       <ProjectDrawer projectsObject={projectsObject} isFetching={isFetching} error={error} />
       <DashboardApp />
     </div>
