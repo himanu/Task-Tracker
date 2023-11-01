@@ -3,8 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const signInUser = async ({ email, name, picture }) => {
     const UserModel = sequelize.models.Users;
-    let user = await UserModel.findOne({ email });
-    
+    let user = await UserModel.findOne({ where: {email} });
     if (!user) {
         /** if it is new user insert in the DB */
         user = await UserModel.create({

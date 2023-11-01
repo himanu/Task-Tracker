@@ -19,7 +19,7 @@ const TaskModel = (sequelize) =>
         project_id: {
             type: DataTypes.BIGINT,
             references: {
-                model: "Projects",
+                model: "projects",
                 key: "id"
             },
             allowNull: false

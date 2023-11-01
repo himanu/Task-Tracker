@@ -4,6 +4,7 @@ const signInController = async (req, res) => {
     try {
         const payload = req.auth;
         const user = await signInUser(payload);
+        console.log("user ", user);
         const { email, name, picture, id } = user;
         const token = createToken(id);
         res.status(200).send({

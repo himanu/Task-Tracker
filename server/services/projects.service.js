@@ -4,8 +4,8 @@ const ProjectModel = sequelize.models.Projects;
 /** get list of user projects */
 const getProjects = async (id) => {
     const projectsCursor = await ProjectModel.findAll({
-        user_id: id
-    })
+        where: { user_id: id }
+    });
     console.log("projects ", projectsCursor);
     return projectsCursor;
 };
