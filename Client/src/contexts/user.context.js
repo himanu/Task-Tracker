@@ -27,11 +27,11 @@ const UserContextProvider = ({ children }) => {
     /** sign in user using access token recieved from google oauth api */
     const signInUser = async (accessToken) => {
         try {
-            const  { data } = await api.signIn(accessToken);
-            setUser(data?.user);
+            const { data } = await api.signIn(accessToken);
             /** store jwt token in local storage */
             if (data?.token)
                 localStorage.setItem(jwtTokenString, data?.token)
+            setUser(data?.user);
         } catch (err) {
             console.error("Error while signing in user ", err);
             throw err.message

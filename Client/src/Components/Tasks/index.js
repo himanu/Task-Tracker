@@ -1,88 +1,79 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import BackgroundImg from "./BackgroundImg";
 import AddIcon from '@mui/icons-material/Add';
 import styles from './style.module.css';
 import { CircularProgress } from "@mui/material";
-import { useSelector, useDispatch } from "react-redux";
-import { addTask, getTasks } from "../../Store/Slices/Tasks";
 import { useNavigate } from 'react-router-dom';
 import TaskModal from "./TaskModal";
+import api from "../../api";
+import { UserContext } from "../../contexts/user.context";
 
+const filterTasks = (tasks) => {
+    const completedTasks = [], pendingTasks = [];
+    if (tasks.length) {
+        tasks.forEach((task) => {
+            if (task.completed) 
+              completedTasks.push(task);
+            else
+              pendingTasks.push(task);
+        })
+    }
+    return {
+        completedTasks,
+        pendingTasks
+    };
+}
 const Todo = ({ projectId }) => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        dispatch(getTasks(projectId));
-    }, [projectId])
-
-    const { user } = useSelector((state) => state.auth);
-    const { tasksObject } = useSelector((state) => state.tasks);
-    const { projectsObject } = useSelector((state) => state.projects);
-
-    const tasksIds = projectsObject[projectId]['tasks'];
+    const [tasks, setTasks] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const [visibilityAddTaskForm, setVisibilityAddTaskForm] = useState('closed');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [, setError] = useState(null);
-    let completedTaskIds = [];
-    let pendingTaskIds = [];
-    if (Object.keys(tasksObject).length && tasksIds?.length) {
-        completedTaskIds = tasksIds.filter((taskId) => {
-            if(tasksObject[taskId]?.completed) {
-                return true;
-            } else {
-                pendingTaskIds.push(taskId);
-                return false;
-            }
-        });
-        console.log('Completed Task Ids ', completedTaskIds, 'pendingTaskIds ', pendingTaskIds);
+
+    const loadTasks = async () => {
+        try {
+            setLoading(true);
+            const response = (await api.getTasks(projectId)).data;
+            setTasks(response);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     }
 
-    function addTaskHandler() {
-        setLoading(true);
-        dispatch(addTask({
-            projectId,
-            taskHeading: title,
-            taskDescription: description
-        })).then((res) => {
-            console.log('res ', res);
-            if (res.error && res.payload === 'Authentication Failed') {
-                return navigate(`/login?onSuccess=${window.location.pathname}`);
-            }
-            setLoading(false);
+    useEffect(() => {
+        loadTasks();
+    }, []);
+
+    console.log("Tasks ", tasks);
+    const { user } = useContext(UserContext);
+    // const { tasksObject } = useSelector((state) => state.tasks);
+    // const { projectsObject } = useSelector((state) => state.projects);
+
+    // const tasksIds = projectsObject[projectId]['tasks'];
+    const { completedTasks, pendingTasks} = filterTasks(tasks);
+
+    async function addTaskHandler() {
+        try {
+            setLoading(true);
+            /** add a task */
+            const task = (await api.addTask({
+                projectId,
+                taskHeading: title, 
+                taskDescription: description
+            })).data.task;
+            setTasks((tasks) => [...tasks, task]);
             setVisibilityAddTaskForm('closed');
-        }).catch((err) => {
-            console.log('err ', err);
+            setLoading(false);
+            setTitle('');
+            setDescription('');
+        } catch (err) {
+            console.log("Error ", err);
             setError(err.message);
-        })
-            .then((res) => {
-                console.log('res1 ', res);
-                setLoading(false);
-                setTitle('');
-                setDescription('');
-            })
-        // setLoading(true);
-        // // request server to add task
-        // api.addTask({
-        //     projectId, 
-        //     taskHeading: title, 
-        //     taskDescription: description})
-        // .then((res) => {
-        //     setLoading(false);
-        //     setVisibilityAddTaskForm('closed');
-        //     console.log('res ', res);
-        // })
-        // .catch((err) => {
-        //     console.log('err ', err);
-        //     setError(err.message);
-        // })
-        // .then(() => {
-        //     setLoading(false);
-        //     setTitle('');
-        //     setDescription('');
-        // });
+        }
     }
 
     return (
@@ -96,38 +87,23 @@ const Todo = ({ projectId }) => {
                 </div>
             </div>
             <div style={{padding: '5px', border: '1px solid #ccc', marginTop: '10px'}}>
-                <h6>Pending Tasks ({pendingTaskIds.length})</h6>
-                {(Object.keys(tasksObject).length && tasksIds?.length) ? tasksIds.map((taskId, idx) => {
-                    const task = tasksObject[taskId];
-                    if (!task) {
-                        return;
-                    } else if(!task['completed']){
-                        return (
-                            <div key={taskId} >
-                                <TaskModal task={tasksObject[taskId]} />
-                            </div>
-                        )
-                    }
+                <h6>Pending Tasks ({pendingTasks.length})</h6>
+                {pendingTasks.length ? pendingTasks.map((task, idx) => (
+                    <div key={task.id} >
+                        <TaskModal task={task} />
+                    </div>
 
-                }) : (<div style={{fontSize: '14px'}}> Hurrah no work left </div>)}
+                )) : (<div style={{fontSize: '14px'}}> Hurrah no work left </div>)}
             </div>
             <div style={{padding: '5px', border: '1px solid #ccc', marginTop: '10px'}}>
-                <h6>Completed Task ({completedTaskIds.length})</h6>
-                {(completedTaskIds.length) ? completedTaskIds.map((taskId, idx) => {
-                    const task = tasksObject[taskId];
-                    if (!task) {
-                        return;
-                    } else if (task['completed']) {
-                        return (
-                            <div key={taskId} >
-                                <TaskModal task={tasksObject[taskId]} />
-                            </div>
-                        )
-                    }
-
-                }) : (
+                <h6>Completed Task ({completedTasks.length})</h6>
+                {(completedTasks.length) ? completedTasks.map((task, idx) => (
+                    <div key={task.id} >
+                        <TaskModal task={task} />
+                    </div>
+                )) : (
                     <div style={{fontSize: '14px'}}>
-                        Do some work
+                        {tasks.length ? "Let's start completing task" : "Create a task"}
                     </div>
                 )}
             </div>
@@ -142,7 +118,7 @@ const Todo = ({ projectId }) => {
                 </div>
             )}
 
-            {(visibilityAddTaskForm === 'closed' && tasksIds.length === 0) && (
+            {(visibilityAddTaskForm === 'closed' && tasks.length === 0) && (
                 <div style={{ textAlign: 'center' }}>
                     <BackgroundImg />
                     <div style={{ fontSize: '0.8rem' }}>Get a clear view of the day ahead.</div>

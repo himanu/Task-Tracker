@@ -1,26 +1,25 @@
-import { CircularProgress } from "@mui/material";
-import { useSelector } from "react-redux";
 import Tasks from "../Tasks";
-import {useParams} from 'react-router-dom';
+import { useContext } from "react";
+import { UserContext } from "../../contexts/user.context";
 
-export default function Project() {
-  let params = useParams();
-  const projectId = params.projectId;
-  const {projectsObject} = useSelector((state) => state.projects);
-  const project = projectsObject[projectId];
-
-  if(!project) {
-    return <CircularProgress />
-  }
+export default function Project({project}) {
+  const { user } = useContext(UserContext);
   return (
-    <div style={{flex: 1, padding: '1rem', display: 'flex', flexDirection: 'column'}}>
-      <div style={{fontSize: '1.25rem', fontWeight: 500}}>
-        {project && project.project_name}
-      </div>
-      <div>
-        <h6>Tasks</h6>
-      </div>
-      {project && <Tasks projectId={projectId}/>}
-    </div>
+    <>
+      {!project ? (
+        <div style={{ margin: '1em' }}>
+          Welcome {user.name}, please select one of the project
+        </div>) : (
+        <div style={{flex: 1, padding: '1rem', display: 'flex', flexDirection: 'column'}}>
+          <div style={{fontSize: '1.25rem', fontWeight: 500}}>
+            {project?.title ?? ""}
+          </div>
+          <div>
+            <h6>Tasks</h6>
+          </div>
+          <Tasks projectId={project?.id ?? null} />
+        </div>
+      )}
+    </>
   )
 }

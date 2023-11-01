@@ -1,13 +1,14 @@
 import ProjectDrawer from "./Sidebar";
-import DashboardApp from "./App";
 import api from "../../api";
 import { useEffect, useState } from "react";
+import Project from "./Project";
 
 
 export default function Home() {
   const [projectsObject, setProjectsObject] = useState("");
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState("");
+  const [selectedProject, setSelectedProject] = useState("");
 
   const loadProject = async () => {
     try {
@@ -33,11 +34,10 @@ export default function Home() {
     loadProject();
   }, []);
 
-  console.log("projects ", projectsObject);
   return (
     <div style={{ display: "flex" }}>
-      <ProjectDrawer projectsObject={projectsObject} isFetching={isFetching} error={error} addProject={addProject} />
-      <DashboardApp />
+      <ProjectDrawer projectsObject={projectsObject} isFetching={isFetching} error={error} addProject={addProject} setSelectedProject={setSelectedProject} />
+      <Project project={selectedProject}/>
     </div>
   )
 }

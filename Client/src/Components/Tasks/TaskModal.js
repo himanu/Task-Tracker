@@ -1,23 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './style.module.css';
 import { CircularProgress } from "@mui/material";
 import api from '../../api';
-import { useDispatch } from 'react-redux';
-import { deleteTask, updateTasksObject } from '../../Store/Slices/Tasks';
 
 
 export default function TaskModal({ task }) {
-  const [title, setTitle] = useState(task?.taskHeading);
+  const [title, setTitle] = useState(task?.title);
   const [loading, setLoading] = useState(false);
-  const [description, setDescription] = useState(task?.taskDescription);
+  const [description, setDescription] = useState(task?.description);
   const [completed, setCompleted] = useState(task?.completed);
   const [clicked, setClicked] = useState(false);
-  const dispatch = useDispatch();
   
   async function updateTask() {
     setLoading(true);
     const res = await api.updateTask({
-      _id: task._id,
+      id: task.id,
       taskHeading: title,
       taskDescription: description,
       completed
@@ -25,7 +22,6 @@ export default function TaskModal({ task }) {
     const updatedTask = res?.data?.task;
     if(updatedTask) {
       console.log('updatedTask ', updatedTask);
-      dispatch(updateTasksObject(updatedTask));
     }
     setClicked(false);
     setLoading(false);
@@ -35,12 +31,11 @@ export default function TaskModal({ task }) {
   async function deleteTaskHandler() {
     try {
       setLoading(true);
-      const taskId = task?._id;
-      const projectId = task?.parentProject;
+      const taskId = task?.id;
       if (!taskId) {
         return;
       }
-      dispatch(deleteTask({taskId, projectId}));
+      api.deleteTask(taskId);
     } catch(err) {
       console.log("Something went wrong ", err);
       setLoading(false);

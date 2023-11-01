@@ -11,13 +11,10 @@ import StarBorder from "@mui/icons-material/StarBorder";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import AddIcon from '@mui/icons-material/Add';
 import { CircularProgress } from '@mui/material'
-import { useNavigate } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import api from "../../api";
 
-function NestedList({ setCreateProjectModal, projectsObject, isFetching, error }) {
-  const navigate = useNavigate();
+function NestedList({ setCreateProjectModal, projectsObject, isFetching, error, setSelectedProject }) {
   const [open, setOpen] = useState(true);
 
   return (
@@ -41,7 +38,7 @@ function NestedList({ setCreateProjectModal, projectsObject, isFetching, error }
           {!isFetching ?
             projectsObject.length ? projectsObject.map(({ id, title }, index) => {
               return (
-                <ListItemButton sx={{ pl: 4 }} key={index} onClick={() => navigate(`project/${id}`)}>
+                <ListItemButton sx={{ pl: 4 }} key={index} onClick={() => setSelectedProject({id, title})}>
                   <ListItemIcon>
                     <StarBorder />
                   </ListItemIcon>
