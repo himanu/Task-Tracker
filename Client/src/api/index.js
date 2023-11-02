@@ -33,7 +33,7 @@ const api = {
         if(!tokenId) {
             return Promise.reject('Authentication Failed');
         }
-        return axiosInstance.post('task/updateTask', task, {
+        return axiosInstance.put('task/updateTask', task, {
             headers: {
                 'Authorization': `Bearer ${tokenId}`
             }

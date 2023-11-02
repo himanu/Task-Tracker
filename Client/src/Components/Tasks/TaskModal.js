@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import styles from './style.module.css';
 import { CircularProgress } from "@mui/material";
-import api from '../../api';
 
 
-export default function TaskModal({ task }) {
+export default function TaskModal({ task, updateTaskHandler, deleteTaskHandler }) {
   const [title, setTitle] = useState(task?.title);
   const [loading, setLoading] = useState(false);
   const [description, setDescription] = useState(task?.description);
@@ -13,29 +12,25 @@ export default function TaskModal({ task }) {
   
   async function updateTask() {
     setLoading(true);
-    const res = await api.updateTask({
+    await updateTaskHandler({
       id: task.id,
       taskHeading: title,
       taskDescription: description,
       completed
-    })
-    const updatedTask = res?.data?.task;
-    if(updatedTask) {
-      console.log('updatedTask ', updatedTask);
-    }
+    });
     setClicked(false);
     setLoading(false);
-    console.log("response from api ", res);
   }
 
-  async function deleteTaskHandler() {
+  async function deleteTask() {
     try {
       setLoading(true);
       const taskId = task?.id;
       if (!taskId) {
         return;
       }
-      api.deleteTask(taskId);
+      await deleteTaskHandler(taskId);
+      setLoading(false);
     } catch(err) {
       console.log("Something went wrong ", err);
       setLoading(false);
@@ -64,12 +59,12 @@ export default function TaskModal({ task }) {
             <div style={{ marginTop: '10px' }}>
               {task &&
                 <>
-                  <button className={styles.btn + ' ' + styles.updateTaskBtn} style={{marginLeft: '5px'}} disabled={(title == task?.taskHeading && description == task?.taskDescription && completed == task?.completed) || loading}
+                  <button className={styles.btn + ' ' + styles.updateTaskBtn} style={{marginLeft: '5px'}} disabled={(title === task?.taskHeading && description === task?.taskDescription && completed === task?.completed) || loading}
                     onClick={updateTask}
                   >
                     Update Task
                   </button>
-                  <button type='button' className={styles.btn + ' ' + styles.deleteTaskBtn} style={{marginLeft: '5px'}} onClick={deleteTaskHandler}>
+                  <button type='button' className={styles.btn + ' ' + styles.deleteTaskBtn} style={{marginLeft: '5px'}} onClick={deleteTask}>
                     Delete task
                   </button>
                   <button className={styles.btn + ' ' + styles.cancelBtn} style={{ marginLeft: '5px' }} onClick={() => setClicked(false)} disabled={loading}>
