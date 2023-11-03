@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/himanu/Task-Tracker/tree/main/Client/static/css/main.b3ac0e25.chunk.css",
+    "main.js": "/himanu/Task-Tracker/tree/main/Client/static/js/main.2d62cbff.chunk.js",
+    "main.js.map": "/himanu/Task-Tracker/tree/main/Client/static/js/main.2d62cbff.chunk.js.map",
+    "runtime-main.js": "/himanu/Task-Tracker/tree/main/Client/static/js/runtime-main.54215ded.js",
+    "runtime-main.js.map": "/himanu/Task-Tracker/tree/main/Client/static/js/runtime-main.54215ded.js.map",
+    "static/css/2.cbedb215.chunk.css": "/himanu/Task-Tracker/tree/main/Client/static/css/2.cbedb215.chunk.css",
+    "static/js/2.6ef94553.chunk.js": "/himanu/Task-Tracker/tree/main/Client/static/js/2.6ef94553.chunk.js",
+    "static/js/2.6ef94553.chunk.js.map": "/himanu/Task-Tracker/tree/main/Client/static/js/2.6ef94553.chunk.js.map",
+    "index.html": "/himanu/Task-Tracker/tree/main/Client/index.html",
+    "static/css/2.cbedb215.chunk.css.map": "/himanu/Task-Tracker/tree/main/Client/static/css/2.cbedb215.chunk.css.map",
+    "static/css/main.b3ac0e25.chunk.css.map": "/himanu/Task-Tracker/tree/main/Client/static/css/main.b3ac0e25.chunk.css.map",
+    "static/js/2.6ef94553.chunk.js.LICENSE.txt": "/himanu/Task-Tracker/tree/main/Client/static/js/2.6ef94553.chunk.js.LICENSE.txt",
+    "static/media/Home.2e2ba760.jpg": "/himanu/Task-Tracker/tree/main/Client/static/media/Home.2e2ba760.jpg",
+    "static/media/Welcome.89d89be9.jpg": "/himanu/Task-Tracker/tree/main/Client/static/media/Welcome.89d89be9.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.54215ded.js",
+    "static/css/2.cbedb215.chunk.css",
+    "static/js/2.6ef94553.chunk.js",
+    "static/css/main.b3ac0e25.chunk.css",
+    "static/js/main.2d62cbff.chunk.js"
+  ]
+}
