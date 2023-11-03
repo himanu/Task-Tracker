@@ -35,7 +35,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", height: "100%" }}>
       <ProjectDrawer projectsObject={projectsObject} isFetching={isFetching} error={error} addProject={addProject} setSelectedProject={setSelectedProject} />
       <Project project={selectedProject}/>
     </div>

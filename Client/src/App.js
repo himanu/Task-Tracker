@@ -8,7 +8,7 @@ import Dashboard from './Components/Dashboard/index';
 
 function App() {
     return (
-        <div style={{ display: 'flex', background: '#f6f8f9', minHeight: '100vh', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', background: '#f6f8f9', height: '100vh', flexDirection: 'column' }}>
             <Navbar />
             <Routes>
                 <Route path="/" element={<Welcome />} />
