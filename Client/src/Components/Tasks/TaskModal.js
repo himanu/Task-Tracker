@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './style.module.css';
 import { CircularProgress } from "@mui/material";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 
 export default function TaskModal({ task, updateTaskHandler, deleteTaskHandler }) {
@@ -41,7 +42,8 @@ export default function TaskModal({ task, updateTaskHandler, deleteTaskHandler }
     <>
       {!clicked && 
         <div style={{ padding: '5px', background: 'rgb(246, 248, 249)', margin: '5px 0', cursor: 'pointer' }} onClick={() =>{setClicked(true)}} >
-          {task?.taskHeading}
+          {task?.title}
+          <ArrowDropDownIcon />
         </div>}
       {clicked &&
         <div style={{ border: '1px solid #ddd', padding: '10px', marginTop: '1rem' }}>
